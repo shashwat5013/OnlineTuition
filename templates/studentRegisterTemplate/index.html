@@ -92,7 +92,7 @@
             {% if alert_flag %}
                     <script>alert("password entered did not matched with each other so please try again")</script>
             {% endif %}
-          <form class="login100-form validate-form" action="studentRegister" method="POST" enctype="multipart/form-data">
+          <form class="login100-form validate-form" action="/Accounts/studentRegister" method="POST" enctype="multipart/form-data">
               {% csrf_token %}
             <span class="login100-form-title p-b-59" >
               Sign Up

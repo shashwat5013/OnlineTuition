@@ -85,22 +85,30 @@
                   </div>
                   <div class="header-info-right">
                     <ul>
-                      <li>
-                        <a href="Accounts/studentLogin"
-                          ><i class="ti-user"></i>Student Login</a
-                        >
-                      </li>
-                      <li>
-                        <a href="Accounts/tutorLogin"><i class="ti-user"></i>Tutor Login</a>
-                      </li>
-                      <li>
-                        <a href="Accounts/studentRegister"
-                          ><i class="ti-lock"></i>Student Register</a
-                        >
-                      </li>
-                      <li>
-                        <a href="Accounts/tutorRegister"><i class="ti-lock"></i>Tutor Register</a>
-                      </li>
+                        {% if foundStudent %}
+                        <li>
+                          <a href="/Accounts/home"
+                            ><i class="ti-user"></i>Hi {{student.fullName}}</a
+                          >
+                        </li>
+                        {% else %}
+                          <li>
+                            <a href="/Accounts/studentLogin"
+                              ><i class="ti-user"></i>Student Login</a
+                            >
+                          </li>
+                          <li>
+                            <a href="/Accounts/tutorLogin"><i class="ti-user"></i>Tutor Login</a>
+                          </li>
+                          <li>
+                            <a href="/Accounts/studentRegister"
+                              ><i class="ti-lock"></i>Student Register</a
+                            >
+                          </li>
+                          <li>
+                            <a href="/Accounts/tutorRegister"><i class="ti-lock"></i>Tutor Register</a>
+                          </li>
+                          {% endif %}
                     </ul>
                   </div>
                 </div>
@@ -110,7 +118,7 @@
           <div class="header-bottom header-sticky">
             <!-- Logo -->
             <div class="logo d-none d-lg-block">
-              <a href="index.html"
+              <a href="/Accounts/home" method="POST"
                 ><img src="{% static 'home/img/logo/logo.png' %}" alt=""
               /></a>
             </div>
@@ -118,7 +126,7 @@
               <div class="menu-wrapper">
                 <!-- Logo -->
                 <div class="logo logo2 d-block d-lg-none">
-                  <a href="index.html"
+                  <a href="/Accounts/home"
                     ><img src="{% static 'home/img/logo/logo.png' %}" alt=""
                   /></a>
                 </div>
@@ -126,10 +134,10 @@
                 <div class="main-menu d-none d-lg-block">
                   <nav>
                     <ul id="navigation">
-                      <li><a href="index.html">Home</a></li>
-                      <li><a href="about.html">About</a></li>
-                      <li><a href="courses.html">Courses</a></li>
-                      <li><a href="instructor.html">Instructors</a></li>
+                      <li><a href="/Accounts/home">Home</a></li>
+                      <li><a href="/Accounts/home">About</a></li>
+                      <li><a href="/Accounts/home">Courses</a></li>
+                      <li><a href="/Accounts/home">Instructors</a></li>
                       <li>
                         <a href="blog.html">Blog</a>
                         <ul class="submenu">
