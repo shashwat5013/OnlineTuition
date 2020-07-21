@@ -1,10 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
+
 # Create your views here.
 
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+
+@login_required(login_url='/accounts/home/')
 def encryptPassword(password):
     hashedPassword = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
     return hashedPassword.decode('utf8')
@@ -19,6 +26,8 @@ def checkPassword(password,hashedPassword):
         return False
 
 student=None
+foundStudent = False
+notfoundStudent = False
 def home(request):
     print("printing the request which home page is callint {}".format(request))
     print(student)
@@ -55,13 +64,12 @@ def studentRegister(request):
 
 
 def studentLogin(request):
-    global student
+    global student,foundStudent,notfoundStudent
     print("printing the request which login page is callint {}".format(request))
     if request.method == "POST":
         emailId = request.POST['emailId']
         password = request.POST['password']
         detailsOfStudent = studentDetails.objects.filter(emailId=emailId)
-        foundUser=False
         if len(detailsOfStudent)!=0:
             for d in detailsOfStudent:
                 if checkPassword(password,d.password):
@@ -78,8 +86,15 @@ def studentLogin(request):
 
 
 def tutorRegister(request):
-    
+
     return render(request,'tutorRegisterTemplate/index.html')
 
 def tutorLogin(request):
     return render(request,'tutorLoginTemplate/index.html')
+
+def studentLogout(request):
+    global student,foundStudent
+    student=None
+    foundStudent=False
+    #@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+    return redirect('/Accounts/home')
