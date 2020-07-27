@@ -3,6 +3,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
   <head>
+
+   <SCRIPT LANGUAGE="javascript">
+function ClearHistory()
+{
+     var backlen = history.length;
+     history.go(-backlen);
+     window.location.href = loggedOutPageUrl
+}
+</SCRIPT>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>OnlineTuition Home</title>
@@ -96,7 +105,20 @@
                             ><i class="ti-user"></i>LogOut</a
                           >
                         </li>
+
+                        {% elif foundTutor %}
+                        <li>
+                          <a href="/Accounts/home"
+                            ><i class="ti-user"></i>Hi {{tutor.firstName}}</a
+                          >
+                        </li>
+                        <li>
+                          <a href="/Accounts/tutorLogout"
+                            ><i class="ti-user"></i>LogOut</a
+                          >
+                        </li>
                         {% else %}
+
                           <li>
                             <a href="/Accounts/studentLogin"
                               ><i class="ti-user"></i>Student Login</a

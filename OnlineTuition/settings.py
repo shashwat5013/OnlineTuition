@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'OnlineTuition',
         'USER': 'postgres',
-        'PASSWORD':'2610',
+        'PASSWORD':'Jhansi@123',
         'HOST': 'localhost'
     }
 }
@@ -109,6 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+
+DATE_INPUT_FORMATS=['%d-%m-%Y', '%Y-%m-%d']
 
 TIME_ZONE = 'UTC'
 
