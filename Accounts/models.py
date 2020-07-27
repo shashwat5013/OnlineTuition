@@ -8,6 +8,7 @@ class studentDetails(models.Model):
     password          = models.CharField(max_length=10000)
     profilePhoto      = models.ImageField(upload_to='studentProfile')
     termsAndCondition = models.BooleanField(default=False)
+      
 
 class tutorDetails(models.Model):
     fullName         = models.CharField(max_length=100)

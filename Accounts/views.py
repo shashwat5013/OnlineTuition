@@ -3,15 +3,11 @@ from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control
+from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User,auth
 
 # Create your views here.
 
-
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-
-@login_required(login_url='/accounts/home/')
 def encryptPassword(password):
     hashedPassword = bcrypt.hashpw(password.encode('utf-8'),bcrypt.gensalt())
     return hashedPassword.decode('utf8')
@@ -57,8 +53,10 @@ def studentRegister(request):
             if studentDetails.objects.filter(emailId=emailId).exists():
                 messages.info(request,'exist')
                 return render(request,'studentLoginTemplate/index.html',{'alert_flag': True})
+        user = User.objects.create_user(email=emailId, password = password,username=userName, first_name=fullName)
         studentDetails.objects.create(fullName=fullName,emailId=emailId,userName=userName,profilePhoto=profilePhoto,password=encryptPassword(password),termsAndCondition=termsAndCondition)
-        return render(request,'home_page_template/index.html')
+        user.save()
+        return render(request,'home_page_template/index.html',{'foundStudent':True,'student':student})
     else:
         return render(request, 'studentRegisterTemplate/index.html')
 
@@ -66,6 +64,7 @@ def studentRegister(request):
 def studentLogin(request):
     global student,foundStudent,notfoundStudent
     print("printing the request which login page is callint {}".format(request))
+    # try:
     if request.method == "POST":
         emailId = request.POST['emailId']
         password = request.POST['password']
@@ -78,23 +77,30 @@ def studentLogin(request):
                     break
         print(foundUser)
         if foundUser:
+            print("authenticating user")
+            user=auth.authenticate(email=emailId,password=password)
+            print("loginnging in the user")
+            auth.login(request,user)
+            print("login done")
             return render(request,'home_page_template/index.html',{'foundStudent':True,'student':student})
         else:
             return render(request, 'studentLoginTemplate/index.html',{'notfoundStudent':True})
     else:
         return render(request, 'studentLoginTemplate/index.html')
+    # except:
+    #     print("some error occured ")
+    #     return render(request,'home_page_template/index.html')
+
 
 
 def tutorRegister(request):
-
+    # user = User.objects.filter(id=2)
+    # user.delete()
     return render(request,'tutorRegisterTemplate/index.html')
 
 def tutorLogin(request):
     return render(request,'tutorLoginTemplate/index.html')
 
 def studentLogout(request):
-    global student,foundStudent
-    student=None
-    foundStudent=False
-    #@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-    return redirect('/Accounts/home')
+    auth.logout(request)
+    return render(request,'home_page_template/index.html')
