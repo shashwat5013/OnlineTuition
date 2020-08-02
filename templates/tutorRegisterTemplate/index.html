@@ -29,11 +29,15 @@
 
 <body>
     <div class="page-wrapper bg-gra-02 p-t-130 p-b-100 font-poppins">
+        {% if alert_flag %}
+                    <script>alert("password entered did not matched with each other so please try again")</script>
+            {% endif %}
         <div class="wrapper wrapper--w680">
             <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Tutor Registration Form</h2>
                     <form method="POST">
+                        {% csrf_token %}
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -45,6 +49,20 @@
                                 <div class="input-group">
                                     <label class="label">last name</label>
                                     <input class="input--style-4" type="text" name="lastName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Password</label>
+                                    <input class="input--style-4" type="password" name="password" placeholder="**************">
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Repeat Password</label>
+                                    <input class="input--style-4" type="password" name="repeatPassword" placeholder="**************">
                                 </div>
                             </div>
                         </div>
@@ -68,11 +86,11 @@
                                     <label class="label">Gender</label>
                                     <div class="p-t-10">
                                         <label class="radio-container m-r-45">Male
-                                            <input type="radio" checked="checked" name="male">
+                                            <input type="radio" checked="checked" name="gender" value="male">
                                             <span class="checkmark"></span>
-                                        </label>
+                                       </label>
                                         <label class="radio-container">Female
-                                            <input type="radio" name="female">
+                                            <input type="radio" name="gender" value="female">
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -89,7 +107,7 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phoneNumber">
+                                    <input class="input--style-4" type="number"  name="phoneNumber" min="0" max="100000000000">
                                 </div>
                             </div>
                         </div>
@@ -106,6 +124,7 @@
                                 <div class="select-dropdown"></div>
                             </div>
                         </div>
+
                         <div class="p-t-15">
                             <button class="btn btn--radius-2 btn--blue" type="submit">Submit</button>
                         </div>

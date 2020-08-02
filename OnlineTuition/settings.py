@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'OnlineTuition',
         'USER': 'postgres',
-        'PASSWORD':'2610',
+        'PASSWORD': '2610',
         'HOST': 'localhost'
     }
 }
@@ -110,6 +110,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+DATE_INPUT_FORMATS = ['%d-%m-%Y', '%Y-%m-%d']
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -127,6 +129,6 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'templates/static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assests')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGOUT_REDIRECT_URL = "/"

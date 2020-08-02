@@ -3,6 +3,14 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
   <head>
+   <SCRIPT LANGUAGE="javascript">
+function ClearHistory()
+{
+     var backlen = history.length;
+     history.go(-backlen);
+     window.location.href = loggedOutPageUrl
+}
+</SCRIPT>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>OnlineTuition Home</title>
@@ -35,6 +43,8 @@
     <link rel="stylesheet" href="{% static 'home/css/nice-select.css' %}" />
     <link rel="stylesheet" href="{% static 'home/css/style.css' %}" />
   </head>
+
+
   <body>
     <!--? Preloader Start -->
     <div id="preloader-active">
@@ -96,7 +106,20 @@
                             ><i class="ti-user"></i>LogOut</a
                           >
                         </li>
+
+                        {% elif foundTutor %}
+                        <li>
+                          <a href="/Accounts/home"
+                            ><i class="ti-user"></i>Hi {{tutor.firstName}}</a
+                          >
+                        </li>
+                        <li>
+                          <a href="/Accounts/tutorLogout"
+                            ><i class="ti-user"></i>LogOut</a
+                          >
+                        </li>
                         {% else %}
+
                           <li>
                             <a href="/Accounts/studentLogin"
                               ><i class="ti-user"></i>Student Login</a
@@ -271,102 +294,27 @@
             <div class="cl-xl-7 col-lg-8 col-md-10">
               <!-- Section Tittle -->
               <div class="section-tittle text-center mb-70">
-                <span>Popular Online Courses</span>
-                <h2>Lets Brows All Catagori</h2>
+                        <span>Popular Teacher with best Reviews</span>
               </div>
             </div>
           </div>
           <div class="row">
+              {% for tutor in allTutorInOurDatabase %}
             <div class="col-lg-4 col-md-6 col-sm-6">
               <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-web-design"></span>
-                </div>
+                  <span>
+                      <img src="{{ tutor.profilePhoto.url}}" height=300 width=250></img>
+                  </span>
                 <div class="cat-cap">
-                  <h5><a href="#">Web Design</a></h5>
+                  <h5><a href="/Accounts/detailsOfTutor/{{tutor.emailId}}">Name : {{tutor.firstName}} {{tutor.lastName}}</a></h5>
                   <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
+                    {{tutor.summary}}
                   </p>
-                  <a href="#" class="read-more1">Read More ></a>
+                  <a href="/Accounts/detailsOfTutor/{{tutor.emailId}}" class="read-more1">click here to know more about me</a>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-education"></span>
-                </div>
-                <div class="cat-cap">
-                  <h5><a href="#">App Development</a></h5>
-                  <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
-                  </p>
-                  <a href="#" class="read-more1">Read More ></a>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-communications"></span>
-                </div>
-                <div class="cat-cap">
-                  <h5><a href="#">Video Editing</a></h5>
-                  <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
-                  </p>
-                  <a href="#" class="read-more1">Read More ></a>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-computing"></span>
-                </div>
-                <div class="cat-cap">
-                  <h5><a href="#">Digital Marketing</a></h5>
-                  <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
-                  </p>
-                  <a href="#" class="read-more1">Read More ></a>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-tools-and-utensils"></span>
-                </div>
-                <div class="cat-cap">
-                  <h5><a href="#">Seo Marketing</a></h5>
-                  <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
-                  </p>
-                  <a href="#" class="read-more1">Read More ></a>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                <div class="cat-icon">
-                  <span class="flaticon-business"></span>
-                </div>
-                <div class="cat-cap">
-                  <h5><a href="#">Content Writing</a></h5>
-                  <p>
-                    Sorem hpsum folor sixdsft amhtget, consectetur adipiscing
-                    eliht, sed do eiusmod tempor incidi.
-                  </p>
-                  <a href="#" class="read-more1">Read More ></a>
-                </div>
-              </div>
-            </div>
+            {% endfor %}
           </div>
           <!-- Section Button -->
           <div class="row">
