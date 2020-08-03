@@ -107,8 +107,6 @@ def tutorRegister(request):
         repeatPassword = request.POST['repeatPassword']
         emailId = request.POST['emailId']
         gender = request.POST['gender']
-        birthday = request.POST['birthday']
-        phoneNumber = request.POST['phoneNumber']
         profilePhoto = request.POST['profilePhoto']
         profilePhoto='tutorProfile/'+profilePhoto
         print(profilePhoto)
@@ -122,7 +120,7 @@ def tutorRegister(request):
         userName=emailId.split('@')[0]
         user=User.objects.create_user(first_name=firstName, last_name=lastName, email=emailId,  username=userName, password=password)
         user.save()
-        tutorDetails.objects.create(firstName=firstName, lastName=lastName,password=encryptPassword(password), emailId=emailId, gender=gender,phoneNumber=phoneNumber, profilePhoto=profilePhoto, userName=userName)
+        tutorDetails.objects.create(firstName=firstName, lastName=lastName,password=encryptPassword(password), emailId=emailId, gender=gender, profilePhoto=profilePhoto, userName=userName)
         return render(request, 'home_page_template/index.html')
     else:
         return render(request, 'tutorRegisterTemplate/index.html')
@@ -175,5 +173,4 @@ def detailsOfTutor(request,tutor_email):
         if a.emailId==tutor_email:
             tutorDetailFetched=a
             break
-    print(tutorDetailFetched.summary)
     return render(request,'detailsOfTutorTemplate/index.html',{'tutorDetailFetched':tutorDetailFetched})

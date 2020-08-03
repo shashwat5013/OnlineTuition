@@ -36,7 +36,7 @@
             <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Tutor Registration Form</h2>
-                    <form method="POST">
+                    <form method="POST" action="/Accounts/tutorRegister">
                         {% csrf_token %}
                         <div class="row row-space">
                             <div class="col-2">
@@ -66,21 +66,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-t-15">
-                            <label class="label">profile photo
-                            <input type="file" name="profilePhoto"></input>
-                            </label>
-                        </div>
                         <div class="row row-space">
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Birthday</label>
-                                    <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
-                                        <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Gender</label>
@@ -96,20 +82,17 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Email</label>
                                     <input class="input--style-4" type="email" name="emailId">
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="number"  name="phoneNumber" min="0" max="100000000000">
-                                </div>
-                            </div>
+                        </div>
+                        <div class="p-t-15">
+                            <label class="label">profile photo
+                            <input type="file" name="profilePhoto"></input>
+                            </label>
                         </div>
 
                         <div class="p-t-15">

@@ -21,9 +21,7 @@ class tutorDetails(models.Model):
     password         = models.CharField(max_length=10000 , null=True)
     emailId          = models.EmailField(max_length=254,primary_key=True)
     gender           = models.CharField(max_length=10, null=True)
-    phoneNumber     = models.CharField(max_length=20, null=True)
     profilePhoto     = models.ImageField(upload_to='tutorProfile', null=False)
-    summary          = models.TextField(default="")
     userName         = models.CharField(max_length=100)
 
     def __str__(self):
