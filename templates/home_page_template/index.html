@@ -97,7 +97,7 @@ function ClearHistory()
                     <ul>
                         {% if foundStudent %}
                         <li>
-                          <a href="/Accounts/home"
+                          <a href="/"
                             ><i class="ti-user"></i>Hi {{student.fullName}}</a
                           >
                         </li>
@@ -109,7 +109,7 @@ function ClearHistory()
 
                         {% elif foundTutor %}
                         <li>
-                          <a href="/Accounts/home"
+                          <a href="/"
                             ><i class="ti-user"></i>Hi {{tutor.firstName}}</a
                           >
                         </li>
@@ -146,7 +146,7 @@ function ClearHistory()
           <div class="header-bottom header-sticky">
             <!-- Logo -->
             <div class="logo d-none d-lg-block">
-              <a href="/Accounts/home" method="POST"
+              <a href="/" method="POST"
                 ><img src="{% static 'home/img/logo/logo.png' %}" alt=""
               /></a>
             </div>
@@ -154,7 +154,7 @@ function ClearHistory()
               <div class="menu-wrapper">
                 <!-- Logo -->
                 <div class="logo logo2 d-block d-lg-none">
-                  <a href="/Accounts/home"
+                  <a href="/"
                     ><img src="{% static 'home/img/logo/logo.png' %}" alt=""
                   /></a>
                 </div>
@@ -162,10 +162,10 @@ function ClearHistory()
                 <div class="main-menu d-none d-lg-block">
                   <nav>
                     <ul id="navigation">
-                      <li><a href="/Accounts/home">Home</a></li>
-                      <li><a href="/Accounts/home">About</a></li>
-                      <li><a href="/Accounts/home">Courses</a></li>
-                      <li><a href="/Accounts/home">Instructors</a></li>
+                      <li><a href="/">Home</a></li>
+                      <li><a href="/">About</a></li>
+                      <li><a href="/">Courses</a></li>
+                      <li><a href="/">Instructors</a></li>
                       <li>
                         <a href="blog.html">Blog</a>
                         <ul class="submenu">

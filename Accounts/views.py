@@ -6,6 +6,7 @@ from Accounts.models import tutorDetails
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
+from django.contrib.auth import authenticate, login, logout
 
 
 
@@ -40,8 +41,36 @@ def home(request):
         return render(request, 'home_page_template/index.html', {'foundStudent': True, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
 
 
+def studentLogin(request):
+    global student, foundStudent, notfoundStudent
+    # try:
+    if request.method == "POST":
+        foundUser=False
+        userName=None
+        emailId = request.POST['emailId']
+        password = request.POST['password']
+        detailsOfStudent = studentDetails.objects.filter(emailId=emailId)
+        if len(detailsOfStudent) != 0:
+            for d in detailsOfStudent:
+                if checkPassword(password, d.password):
+                    foundUser = True
+                    student = d
+                    break
+        print(foundUser)
+        if foundUser:
+            user = authenticate(username=student.userName, password=password)
+            login(request, user)
+            allTutorInOurDatabase=tutorDetails.objects.all()
+            return render(request, 'home_page_template/index.html', {'foundStudent': True, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
+        else:
+            return render(request, 'studentLoginTemplate/index.html', {'notfoundStudent': True})
+    else:
+        return render(request, 'studentLoginTemplate/index.html')
+    # except:
+    #     print("some error occured ")
+    #     return render(request,'home_page_template/index.html')
+
 def studentRegister(request):
-    print("printing the request which register page is callint {}".format(request))
     if request.method == "POST":
         fullName = request.POST['fullName']
         emailId = request.POST['emailId']
@@ -49,61 +78,25 @@ def studentRegister(request):
         password = request.POST['password']
         repeatPassword = request.POST['repeatPassword']
         profilePhoto = request.FILES.get('profilePhoto', False)
+        print(profilePhoto)
         if request.POST['remember-me'] == "on":
             termsAndCondition = True
         else:
             termsAndCondition = False
-        print(fullName, emailId, userName, password,
-              repeatPassword, termsAndCondition, profilePhoto)
         if password != repeatPassword:
-            print("password")
             messages.info(request, 'password')
             return render(request, 'studentRegisterTemplate/index.html', {'alert_flag': True})
         else:
-            print("in else")
             if studentDetails.objects.filter(emailId=emailId).exists():
-                print("email")
                 messages.info(request, 'exist')
                 return render(request, 'studentLoginTemplate/index.html', {'alert_flag': True})
-        print("creating")
         studentDetails.objects.create(fullName=fullName, emailId=emailId, userName=userName,
                                       profilePhoto=profilePhoto, password=encryptPassword(password), termsAndCondition=termsAndCondition)
+        user=User.objects.create_user(first_name=fullName.split()[0],last_name=fullName.split()[1:],email=emailId,username=userName,password=password)
+        user.save()
         return render(request, 'home_page_template/index.html', {'foundStudent': True})
     else:
         return render(request, 'studentRegisterTemplate/index.html')
-
-
-def studentLogin(request):
-    global student, foundStudent, notfoundStudent
-    print("printing the request which login page is callint {}".format(request))
-    try:
-        if request.method == "POST":
-            emailId = request.POST['emailId']
-            password = request.POST['password']
-            detailsOfStudent = studentDetails.objects.filter(emailId=emailId)
-            if len(detailsOfStudent) != 0:
-                for d in detailsOfStudent:
-                    if checkPassword(password, d.password):
-                        foundUser = True
-                        student = d
-                        break
-            print(foundUser)
-            if foundUser:
-                print("authenticating user")
-                user = auth.authenticate(email=emailId, password=password)
-                print("loginnging in the user")
-                auth.login(request, user)
-                print("login done")
-                allTutorInOurDatabase=tutorDetails.objects.all()
-                return render(request, 'home_page_template/index.html', {'foundStudent': True, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
-            else:
-                return render(request, 'studentLoginTemplate/index.html', {'notfoundStudent': True})
-        else:
-            return render(request, 'studentLoginTemplate/index.html')
-    except:
-        print("some error occured ")
-        return render(request,'home_page_template/index.html')
-
 
 def tutorRegister(request):
     print("printing the request which register page is callint {}".format(request))
@@ -116,8 +109,9 @@ def tutorRegister(request):
         gender = request.POST['gender']
         birthday = request.POST['birthday']
         phoneNumber = request.POST['phoneNumber']
-        specialityCourse = request.POST['subject']
-        profilePhoto = request.FILES.get('profilePhoto', False)
+        profilePhoto = request.POST['profilePhoto']
+        profilePhoto='tutorProfile/'+profilePhoto
+        print(profilePhoto)
         if password != repeatPassword:
             messages.info(request, 'password')
             return render(request, 'tutorRegisterTemplate/index.html', {'alert_flag': True})
@@ -125,7 +119,10 @@ def tutorRegister(request):
             if tutorDetails.objects.filter(emailId=emailId).exists():
                 messages.info(request, 'exist')
                 return render(request, 'tutorLoginTemplate/index.html', {'alert_flag': True})
-        tutorDetails.objects.create(firstName=firstName, lastName=lastName,password=encryptPassword(password), emailId=emailId, gender=gender,phoneNumber=phoneNumber, specialityCourse=specialityCourse, profilePhoto=profilePhoto)
+        userName=emailId.split('@')[0]
+        user=User.objects.create_user(first_name=firstName, last_name=lastName, email=emailId,  username=userName, password=password)
+        user.save()
+        tutorDetails.objects.create(firstName=firstName, lastName=lastName,password=encryptPassword(password), emailId=emailId, gender=gender,phoneNumber=phoneNumber, profilePhoto=profilePhoto, userName=userName)
         return render(request, 'home_page_template/index.html')
     else:
         return render(request, 'tutorRegisterTemplate/index.html')
@@ -146,6 +143,8 @@ def tutorLogin(request):
                     break
         print(foundUser)
         if foundUser:
+            user = authenticate(username=emailId.split('@')[0], password=password)
+            login(request, user)
             return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor': tutor})
         else:
             return render(request, 'tutorLoginTemplate/index.html', {'notfoundTutor': True})
@@ -157,20 +156,22 @@ def studentLogout(request):
     global student, foundStudent
     student = None
     foundStudent = False
-    return redirect('/Accounts/home')
+    logout(request)
+    return redirect('/')
 
 
 def tutorLogout(request):
     global tutor, foundTutor
     tutor = None
     foundTutor = False
-    return redirect('/Accounts/home')
+    logout(request)
+    return redirect('/')
 
 def detailsOfTutor(request,tutor_email):
-    detailsOfTutor=tutorDetails.objects.all()
+    detailsOfTutorFetched=tutorDetails.objects.all()
     print("in details of Tutor")
     global tutorDetailFetched
-    for a in detailsOfTutor:
+    for a in detailsOfTutorFetched:
         if a.emailId==tutor_email:
             tutorDetailFetched=a
             break
