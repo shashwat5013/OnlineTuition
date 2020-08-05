@@ -42,7 +42,8 @@ def checkPassword(password, hashedPassword):
 def home(request):
     allTutorInOurDatabase=tutorDetails.objects.all()
     isUsing = ifLoggedIn(request)
-    if isUsing==False:
+    print(isUsing)
+    if isUsing==True:
         return render(request, 'home_page_template/index.html', {'allTutorInOurDatabase':allTutorInOurDatabase})
     else:
         userName=request.user.username
