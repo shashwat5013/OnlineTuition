@@ -12,5 +12,6 @@ urlpatterns = [
     path('',views.home,name="home"),
     path('studentLogout',views.studentLogout,name="studentLogout"),
     path('tutorLogout',views.tutorLogout,name="tutorLogout"),
-    path('detailsOfTutor/<str:tutor_email>',views.detailsOfTutor,name="detailsOfTutor")
+    path('detailsOfTutor/<str:tutor_email>',views.detailsOfTutor,name="detailsOfTutor"),
+    path('tutorSubjectDetailsFilling', views.tutorSubjectDetailsFilling, name="tutorSubjectDetailsFilling"),
 ]

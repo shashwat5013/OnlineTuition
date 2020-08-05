@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>tutor subject   details</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href=" {% static 'tutorSubjectDetails/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href=" {% static 'tutorSubjectDetails/vendor/jquery-ui/jquery-ui.min.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href=" {% static 'tutorSubjectDetails/css/style.css' %}">
+</head>
+<body>
+      
+    <div class="main">
+
+        <section class="signup">
+            <!-- <img src="images/signup-bg.jpg" alt=""> -->
+            <div class="container">
+                <div class="signup-content">
+                    <form method="POST" id="signup-form" class="signup-form" action="/Accounts/tutorSubjectDetails">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subject_name1">Subject 1</label>
+                                <input type="text" class="form-input" name="subject_name1" id="first_name" />
+                            </div>
+                              <div class="form-group">
+                                <label for="hourlyPrice1">Hourly Price</label>
+                                <input type="text" class="form-input" name="hourlyPrice1" id="first_name" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subject_name2">Subject 2</label>
+                                <input type="text" class="form-input" name="subject_name2" id="first_name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="hourlyPrice2">Hourly Price</label>
+                                <input type="text" class="form-input" name="hourlyPrice2" id="first_name" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subject_name3">Subject 3</label>
+                                <input type="text" class="form-input" name="subject_name3" id="first_name" />
+                            </div>
+                             <div class="form-group">
+                                <label for="hourlyPrice3">Hourly Price</label>
+                                <input type="text" class="form-input" name="hourlyPrice3" id="first_name" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            
+                           
+                            <div class="form-group">
+                                <label for="city">Address</label>
+                                <input type="text" class="form-input" name="address" id="last_name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phonenumber">Phone number</label>
+                            <input type="number" class="form-input" name="phonenumber" id="phonenumber" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="summary">Write about yourself </label>
+                                <input type="text" class="form-input" name="summary" id="password"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" id="submit" class="form-submit" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JS -->
+    <script src=" {% static 'tutorSubjectDetails/vendor/jquery/jquery.min.js' %}"></script>
+    <script src=" {% static 'tutorSubjectDetails/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src=" {% static 'tutorSubjectDetails/vendor/jquery-validation/dist/jquery.validate.min.js' %}"></script>
+    <script src=" {% static 'tutorSubjectDetails/vendor/jquery-validation/dist/additional-methods.min.js' %}"></script>
+    <script src=" {% static 'tutorSubjectDetails/js/main.js' %}"></script>
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

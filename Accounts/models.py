@@ -27,3 +27,26 @@ class tutorDetails(models.Model):
     def __str__(self):
         detail=self.firstName+" "+self.lastName+" "+self.emailId
         return detail
+
+class tutorSubjectDetails(models.Model):
+    emailId           = models.EmailField(max_length=254, primary_key=True)
+    subjectName1      = models.CharField(max_length=100, null=True, default=" ")
+    subjectName2      = models.CharField(max_length=100, null=True, default=" ")
+    subjectName3      = models.CharField(max_length=100, null=True, default=" ")
+    hourlyPrice1      = models.CharField(max_length=100, null=True, default=" ")
+    hourlyPrice2      = models.CharField(max_length=100, null=True, default=" ")
+    hourlyPrice3      = models.CharField(max_length=100, null=True, default=" ")
+    address           = models.CharField(max_length=100, null=True, default=" ")
+    phoneNumber       = models.CharField(max_length=20, null=True, default=" ")
+    summary           =  models.CharField(max_length=10000 , null=True, default=" ")
+
+    def __str__(self):
+        return self.emailId
+
+
+class studentTeacherRelation(models.Model):
+    studentEmailId    = models.EmailField(max_length=254, primary_key=True)
+    teacherEmailId    = models.TextField(max_length=10000)
+
+    def __str__(self):
+        return self.studentEmailId
