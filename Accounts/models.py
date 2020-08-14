@@ -50,3 +50,10 @@ class studentTeacherRelation(models.Model):
 
     def __str__(self):
         return self.studentEmailId
+
+class teacherStudentRelation(models.Model):
+    teacherEmailId    = models.EmailField(max_length=254, primary_key=True)
+    studentEmailId    = models.TextField(max_length=10000)
+
+    def __str__(self):
+        return self.teacherEmailId

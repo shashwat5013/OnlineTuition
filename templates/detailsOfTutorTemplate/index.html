@@ -50,14 +50,14 @@
       <div class="row">
         <div class="col-sm-8 col-md-7 py-4">
           <h4 class="text-white">Know Your Teacher</h4>
-          <p class="text-muted">Tutor details</p>
+          <p class="text-muted">{{subjectDetailsTutor.summary}}</p>
         </div>
         <div class="col-sm-4 offset-md-1 py-4">
           <h4 class="text-white">Contact</h4>
           <ul class="list-unstyled">
             <li><a href="#" class="text-white">Follow on Twitter</a></li>
             <li><a href="#" class="text-white">Like on Facebook</a></li>
-            <li><a href="#" class="text-white">Email me</a></li>
+            <li><a href="mailto: {{tutorDetailFetched.emailId}}" class="text-white">Email me</a></li>
           </ul>
         </div>
       </div>
@@ -82,9 +82,12 @@
     <div class="container">
       <img src="{{tutorDetailFetched.profilePhoto.url}}" height=200 width=200>
       <h1>{{tutorDetailFetched.firstName}} {{tutorDetailFetched.lastName}}</h1>
-      <p class="lead text-muted">Tutor Summary</p>
+      <p class="lead text-muted">{{subjectDetailsTutor.summary}}</p>
       <p>
         <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2">Email</a>
+        <marquee behavior="alternate">
+            <a href="/Accounts/studentTeacherRequest/{{tutorDetailFetched.emailId}}">click to request for Tuition</a>
+        </marquee>
       </p>
     </div>
   </section>

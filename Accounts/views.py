@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
-from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails
+from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, studentTeacherRelation, teacherStudentRelation
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -18,6 +18,7 @@ notfoundTutor = False
 foundTutor = False
 
 tutorDetailFetched=None
+tutorEmail=None
 def ifLoggedIn(request):
     print(request.user.is_anonymous)
     if request.user.is_anonymous:
@@ -43,7 +44,7 @@ def home(request):
     allTutorInOurDatabase=tutorDetails.objects.all()
     isUsing = ifLoggedIn(request)
     print(isUsing)
-    if isUsing==True:
+    if (request.user.username=="DSANDALGO" or request.user.is_anonymous==True):
         return render(request, 'home_page_template/index.html', {'allTutorInOurDatabase':allTutorInOurDatabase})
     else:
         userName=request.user.username
@@ -185,6 +186,7 @@ def tutorLogin(request):
         print(tutor)
         print(foundUser)
         userName=(emailId.split('@')[0]+" Tutor")
+        print(userName)
         if foundUser:
             user = authenticate(username=userName, password=password)
             login(request, user)
@@ -212,18 +214,32 @@ def tutorLogout(request):
     return redirect('/')
 
 def detailsOfTutor(request,tutor_email):
+    global tutorEmail
+    tutorEmail=tutor_email
     detailsOfTutorFetched=tutorDetails.objects.all()
-    print("in details of Tutor")
-    global tutorDetailFetched
+    # print(detailsOfTutorFetched)
+    subjectDetailsTutorFetched=tutorSubjectDetails.objects.all()
+    # print(subjectDetailsTutorFetched)
+    # print("in details of Tutor")
+    subjectDetailsTutor=None
+    tutorDetailFetched=None
     for a in detailsOfTutorFetched:
+        #print(a.emailId)
         if a.emailId==tutor_email:
             tutorDetailFetched=a
             break
-    return render(request,'detailsOfTutorTemplate/index.html',{'tutorDetailFetched':tutorDetailFetched})
+    for a in subjectDetailsTutorFetched:
+        # print(a.emailId)
+        # print("printing tutor email {}".format(tutor_email))
+        if a.emailId==tutor_email:
+            subjectDetailsTutor=a
+            break
+    # print("shashwat")
+    # print(subjectDetailsTutor)
+    return render(request,'detailsOfTutorTemplate/index.html',{'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor})
 
 def tutorSubjectDetailsFilling(request):
-    global tutor
-    print(tutor)
+    tutor=None
     if request.method =="POST":
         subject_name1= request.POST.get('subjectName1',False)
         subject_name2= request.POST.get('subjectName2',False)
@@ -242,9 +258,40 @@ def tutorSubjectDetailsFilling(request):
         #     subject_name2=" "
         # if subject_name3==False:
         #     subject_name3=" "
-        tutorSubjectDetails.objects.create(emailId=tutor.emailId, subjectName1=subject_name1,subjectName2=subject_name2,
+        tutorSubjectDetails.objects.create(emailId=request.user.email, subjectName1=subject_name1,subjectName2=subject_name2,
             subjectName3=subject_name3,hourlyPrice1=hourlyPrice1, hourlyPrice2=hourlyPrice2, hourlyPrice3=hourlyPrice3,address=address,
             phoneNumber=phoneNumber,summary=summary)
         return render(request,'home_page_template/index.html',{'foundtutor':True})
     else:
         return render(request, 'tutorSubjectDetailsTemplate/index.html')
+
+def studentTeacherRequest(request,tutor_email):
+    print(tutor_email)
+    print(request.user.is_anonymous)
+    if request.user.is_anonymous==True:
+        print(tutorEmail)
+        return redirect('/Accounts/studentLogin')
+    studentTeacher = studentTeacherRelation.objects.filter(studentEmailId=request.user.email)
+    teacherStudent = teacherStudentRelation.objects.filter(teacherEmailId=tutor_email)
+    teacherStudentRelation.objects.filter(teacherEmailId=tutor_email).delete()
+    if len(studentTeacher)==0:
+        studentTeacherRelation.objects.create(studentEmailId=request.user.email,teacherEmailId=("##"+tutor_email))
+    else:
+        aa=studentTeacher.values('teacherEmailId')
+        names=aa[0]['teacherEmailId'].split("##")
+        if tutor_email not in names:
+            studentTeacherRelation.objects.filter(studentEmailId=request.user.email).delete()
+            teacherEmailIds=aa[0]['teacherEmailId']
+            studentTeacherRelation.objects.create(studentEmailId=request.user.email,teacherEmailId=(teacherEmailIds+"##"+tutor_email))
+            studentTeacherRelation.save()
+    if len(teacherStudent)==0:
+        teacherStudentRelation.objects.create(teacherEmailId=tutor_email, studentEmailId=("##"+request.user.email))
+    else:
+        aaa=teacherStudent.values('studentEmailId')
+        names2=aaa[0]['studentEmailId'].split("##")
+        if request.user.email not in names2:
+            teacherStudentRelation.objects.filter(teacherEmailId=tutor_email).delete()
+            studentEmailIds= aaa[0]['studentEmailId']
+            teacherStudentRelation.objects.create(teacherEmailId=tutor_email, studentEmailId=(studentEmailIds+ "##"+ request.user.email))
+            teacherStudentRelation.save()
+    return redirect('/')
