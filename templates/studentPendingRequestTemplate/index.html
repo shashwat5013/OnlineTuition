@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
-    <title>Know Your Teacher</title>
+    <title>Pending Request with You</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/album/">
 
@@ -25,6 +25,9 @@
 
 
     <style>
+    #mydiv{
+        background-color:green;
+    }
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -33,8 +36,21 @@
         -ms-user-select: none;
         user-select: none;
       }
-      #mydiv{
-          background-color:#7CFC00;
+      .btnn{
+          border: 1px solid #3498db;
+          background: none;
+          padding: 10px 20px;
+          font-size: 15px;
+          font-family: "montserrat";
+          cursor: pointer;
+          margin: 10px;
+          transition: 0.8px;
+      }
+      .btn1{
+          color: #3498db;
+      }
+      .btn1:hover{
+          color:#7CFC00;
       }
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
@@ -78,55 +94,43 @@
   </div>
 </header>
 
+{% if isPending %}
 <main role="main">
-
-  <section class="jumbotron text-center">
-    <div class="container">
-      <img src="{{tutorDetailFetched.profilePhoto.url}}" height=200 width=200>
-      <h1>{{tutorDetailFetched.firstName}} {{tutorDetailFetched.lastName}}</h1>
-      <p class="lead text-muted">{{subjectDetailsTutor.summary}}</p>
-      <p>
-        <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2">Email</a>
-        {% if fromStudentSide %}
-        <marquee behavior="alternate">
-            <a href="/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}">click to request for Tuition</a>
-        </marquee>
-        {% endif %}
-      </p>
-    </div>
-  </section>
-{% if foundStudent %}
-{% else %}
-<div id="mydiv">
-    <h2 class="col-lg-8 mx-auto">Student Under You</h2>
-</div>
-{% for student in detailOfStudentUnder %}
   <div class="album py-5 bg-light">
-
-    <div class="container">
-      <div class="row">
-         <div class="btn-group">
-             <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4">
-                <div class="col-md-1">
-                  <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                      <p class="card-text">
-                          <img src="{{ student.profilePhoto.url}}" height=300 width=250></img>
-                      </p>
+      <div class="col-lg-8 border border-success rounded p-4 m-4 mx-auto">
+          <div id="mydiv">
+              <h2 class="col-lg-8 mx-auto">student pending request with you</h2>
+          </div>
+          {% for student in studentUnderYou %}
+        <div class="row col-lg-8 border border-success rounded p-1 m-1 mx-auto">
+           <div class="btn-group p-2 m-1">
+               <button type="button" class="btn btn-sm btn-outline-secondary">
+                  <div class="col-md-12">
+                    <div class="card p-4 m-2 shadow-sm">
+                      <div class="card-body">
+                        <p class="card-text">
+                            <img src="{{ student.profilePhoto.url}}" height=150 width=350></img>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                          {{student.fullName}}{{student.emailId}}
-
-                  </div>
-            </button>
+                            {{student.fullName}}&emsp;&emsp;&emsp;{{student.emailId}}
+                    </div>
+              </button>
+          </div>
+          <div class="col-lg-8 mx-auto">
+              <button class="btnn btn1" onclick="location.href='/Accounts/accepting/{{student.emailId}}'" type="button">Accept</button>
+              <button class="btnn btn1" onclick="location.href='/Accounts/home'" type="button">Reject</button>
+              <button class="btnn btn1" onclick="location.href='/Accounts/home'" type="button">See Him</button>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-{% endif %}
-</main>
 
+        {% endfor %}
+      </div>
+  </div>
+</main>
+{% else %}
+    <h1> Sorry</h1>
+{% endif %}
 <footer class="text-muted">
   <div class="container">
     <p class="float-right">

@@ -14,5 +14,7 @@ urlpatterns = [
     path('tutorLogout',views.tutorLogout,name="tutorLogout"),
     path('detailsOfTutor/<str:tutor_email>',views.detailsOfTutor,name="detailsOfTutor"),
     path('tutorSubjectDetailsFilling', views.tutorSubjectDetailsFilling, name="tutorSubjectDetailsFilling"),
-    path('studentTeacherRequest/<str:tutor_email>',views.studentTeacherRequest, name="studentTeacherRequest"),
+    path('tutorRequestPendingUrl/<str:tutor_email>',views.tutorRequestPendingUrl, name="tutorRequestPendingUrl"),
+    path('pendingRequest',views.pendingRequest, name= 'pendingRequest'),
+    path('accepting/<str:student_emailId>',views.accepting, name='accepting'),
 ]

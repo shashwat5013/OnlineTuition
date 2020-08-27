@@ -44,16 +44,18 @@ class tutorSubjectDetails(models.Model):
         return self.emailId
 
 
-class studentTeacherRelation(models.Model):
-    studentEmailId    = models.EmailField(max_length=254, primary_key=True)
-    teacherEmailId    = models.TextField(max_length=10000)
+class studentTutorRelation(models.Model):
+    studentEmailId    = models.EmailField(max_length=254)
+    tutorEmailId      = models.EmailField(max_length=254)
 
-    def __str__(self):
-        return self.studentEmailId
+class tutorStudentRelation(models.Model):
+    tutorEmailId      = models.EmailField(max_length=254)
+    studentEmailId    = models.EmailField(max_length=254)
 
-class teacherStudentRelation(models.Model):
-    teacherEmailId    = models.EmailField(max_length=254, primary_key=True)
-    studentEmailId    = models.TextField(max_length=10000)
+class tutorRequestPending(models.Model):
+    tutorEmailId      = models.EmailField(max_length=254)
+    studentEmailId    = models.EmailField(max_length=254)
 
-    def __str__(self):
-        return self.teacherEmailId
+class studentRequestFulfilled(models.Model):
+    studentEmailId    = models.EmailField(max_length=254)
+    tutorEmailId      = models.EmailField(max_length=254)

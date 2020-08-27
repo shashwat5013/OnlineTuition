@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
-from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, studentTeacherRelation, teacherStudentRelation
+from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -19,6 +19,8 @@ foundTutor = False
 
 tutorDetailFetched=None
 tutorEmail=None
+
+foundUser=None
 def ifLoggedIn(request):
     print(request.user.is_anonymous)
     if request.user.is_anonymous:
@@ -58,7 +60,10 @@ def home(request):
             _tutor=tutorDetails.objects.filter(emailId=request.user.email)
             for d in _tutor:
                 tutor=d
-            return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor':tutor})
+            tutorRequestPendingDetail=tutorRequestPending.objects.filter(tutorEmailId=request.user.email)
+            pendingRequest=len(tutorRequestPendingDetail)
+            print(pendingRequest)
+            return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor':tutor, 'pendingRequest':pendingRequest})
 
 
 def studentLogin(request):
@@ -171,7 +176,7 @@ def tutorRegister(request):
 
 
 def tutorLogin(request):
-    global tutor
+    global tutor, foundUser
     print("printing the request which login page is callint {}".format(request))
     if request.method == "POST":
         emailId = request.POST['emailId']
@@ -183,14 +188,15 @@ def tutorLogin(request):
                     foundUser = True
                     tutor = d
                     break
-        print(tutor)
-        print(foundUser)
+        # print(tutor)
+        # print(foundUser)
         userName=(emailId.split('@')[0]+" Tutor")
-        print(userName)
+        # print(userName)
         if foundUser:
             user = authenticate(username=userName, password=password)
             login(request, user)
-            return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor': tutor})
+            #return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor': tutor})
+            return home(request)
         else:
             return render(request, 'tutorLoginTemplate/index.html', {'notfoundTutor': True})
     else:
@@ -236,7 +242,22 @@ def detailsOfTutor(request,tutor_email):
             break
     # print("shashwat")
     # print(subjectDetailsTutor)
-    return render(request,'detailsOfTutorTemplate/index.html',{'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor})
+    fromStudentSide = True
+    detailOfStudentUnder=[]
+    if request.user.username.find(" Tutor")!=-1:
+        fromStudentSide=False
+    print("from Student Side{}".format(fromStudentSide))
+    if fromStudentSide==False:
+        studentUnder=tutorStudentRelation.objects.filter(tutorEmailId=request.user.email)
+        if len(studentUnder)!=0:
+            studentUnderEmailId=studentUnder.values('studentEmailId')[0]['studentEmailId'].split("##")
+            print(studentUnderEmailId)
+            for EmailId in studentUnderEmailId:
+                val=studentDetails.objects.filter(emailId=EmailId)
+                for v in val:
+                    detailOfStudentUnder.append(v)
+            print(detailOfStudentUnder)
+    return render(request,'detailsOfTutorTemplate/index.html',{'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor})
 
 def tutorSubjectDetailsFilling(request):
     tutor=None
@@ -265,33 +286,45 @@ def tutorSubjectDetailsFilling(request):
     else:
         return render(request, 'tutorSubjectDetailsTemplate/index.html')
 
-def studentTeacherRequest(request,tutor_email):
-    print(tutor_email)
-    print(request.user.is_anonymous)
+def tutorRequestPendingUrl(request,tutor_email):
     if request.user.is_anonymous==True:
-        print(tutorEmail)
-        return redirect('/Accounts/studentLogin')
-    studentTeacher = studentTeacherRelation.objects.filter(studentEmailId=request.user.email)
-    teacherStudent = teacherStudentRelation.objects.filter(teacherEmailId=tutor_email)
-    teacherStudentRelation.objects.filter(teacherEmailId=tutor_email).delete()
-    if len(studentTeacher)==0:
-        studentTeacherRelation.objects.create(studentEmailId=request.user.email,teacherEmailId=("##"+tutor_email))
-    else:
-        aa=studentTeacher.values('teacherEmailId')
-        names=aa[0]['teacherEmailId'].split("##")
-        if tutor_email not in names:
-            studentTeacherRelation.objects.filter(studentEmailId=request.user.email).delete()
-            teacherEmailIds=aa[0]['teacherEmailId']
-            studentTeacherRelation.objects.create(studentEmailId=request.user.email,teacherEmailId=(teacherEmailIds+"##"+tutor_email))
-            studentTeacherRelation.save()
-    if len(teacherStudent)==0:
-        teacherStudentRelation.objects.create(teacherEmailId=tutor_email, studentEmailId=("##"+request.user.email))
-    else:
-        aaa=teacherStudent.values('studentEmailId')
-        names2=aaa[0]['studentEmailId'].split("##")
-        if request.user.email not in names2:
-            teacherStudentRelation.objects.filter(teacherEmailId=tutor_email).delete()
-            studentEmailIds= aaa[0]['studentEmailId']
-            teacherStudentRelation.objects.create(teacherEmailId=tutor_email, studentEmailId=(studentEmailIds+ "##"+ request.user.email))
-            teacherStudentRelation.save()
-    return redirect('/')
+        return render(request,'studentLoginTemplate/index.html')
+    studentEmail= request.user.email
+    tutorEmail = tutor_email
+    tutorRequestPendingDetail= tutorRequestPending.objects.filter(tutorEmailId=tutorEmail)
+    for i in range(len(tutorRequestPendingDetail)):
+        if tutorRequestPendingDetail[i].tutorEmailId==tutorEmail and tutorRequestPendingDetail[i].studentEmailId==studentEmail:
+            print('already exists')
+            return home(request)
+    tutorRequestPending.objects.create(tutorEmailId=tutorEmail, studentEmailId=studentEmail)
+    return home(request)
+
+def pendingRequest(request):
+    studentEmails=tutorRequestPending.objects.filter(tutorEmailId=request.user.email)
+    studentUnderYou=[]
+    for i  in range(len(studentEmails)):
+        studentEmail=studentEmails[i].studentEmailId
+        ss=studentDetails.objects.filter(emailId=studentEmail)
+        for j in range(len(ss)):
+            studentUnderYou.append(ss[j])
+    isPending=False
+    if len(studentUnderYou)!=0:
+        isPending=True
+    return render(request,'studentPendingRequestTemplate/index.html',{'studentUnderYou':studentUnderYou,'isPending':isPending})
+
+def accepting(request,student_emailId):
+    print(student_emailId)
+    tutor_email=request.user.email
+    if student_emailId!='album.css':
+        tutorRequestPending.objects.filter(tutorEmailId=tutor_email,studentEmailId=student_emailId).delete()
+        checkStudent=studentTutorRelation.objects.filter(studentEmailId=student_emailId)
+        for s in checkStudent:
+            if s.tutorEmailId==tutor_email:
+                return pendingRequest(request)
+        checkTutor=tutorStudentRelation.objects.filter(tutorEmailId=tutor_email)
+        for s in checkTutor:
+            if s.studentEmailId==student_emailId:
+                return pendingRequest(request)
+        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
+        studentTutorRelation.objects.create(studentEmailId=student_emailId,tutorEmailId=tutor_email)
+    return pendingRequest(request)
