@@ -1,0 +1,35 @@
+{% load static%}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style>
+            body
+            {
+            background-image: url("{% static 'sad3.jpeg' %}");
+            background-size: cover;
+            }
+            .heading{
+                background-color: yellow;
+                color: blue
+            }
+            .shashwat{
+                height: 45px;
+                width: 43%;
+            }
+            .shashwat2{
+                height: 600px;
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <marquee direction="up" scrollamount="20" scrolldelay="0">
+            <div class="shashwat2">
+                <div class="heading shashwat">
+                    <h1>Sorry you have no Request from Students</h1>
+                </div>
+            </div>
+        </marquee>
+    </body>
+</html>

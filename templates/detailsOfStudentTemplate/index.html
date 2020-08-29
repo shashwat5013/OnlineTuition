@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
-    <title>Pending Request with You</title>
+    <title>Know Your Teacher</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/album/">
 
@@ -25,29 +25,6 @@
 
 
     <style>
-    #mydiv{
-        background-color:#00ff00;
-        height: 40px;
-        width:  100%;
-    }
-    .shashwat{
-        background-color: yellow;
-    }
-    .shashwat1{
-        background-color: #D85BAA;
-    }
-    .shashwat2{
-        background-color: #71EF3F;
-    }
-    .shashwat3{
-        background-color: #b3b3ff;
-    }
-    .shashwat4{
-        background-color: #00ffff;
-    }
-    .shashwat5{
-        background-color: #ff1a1a;
-    }
       .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -56,26 +33,8 @@
         -ms-user-select: none;
         user-select: none;
       }
-      .btnn{
-          border: 1px solid #3498db;
-          background-color: "yellow";
-          padding: 10px 20px;
-          font-size: 15px;
-          font-family: "montserrat";
-          cursor: pointer;
-          margin: 10px;
-          transition: 0.8px;
-      }
-      .btn1{
-          color: #3498db;
-      }
-      .btn1:hover{
-          color: black;
-          background-color: #00ffff;
-      }
-      .hash{
-          width:100%;
-          height:20px;
+      #mydiv{
+          background-color:#7CFC00;
       }
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
@@ -86,7 +45,7 @@
     <!-- Custom styles for this template -->
     <link href="album.css" rel="stylesheet">
   </head>
-  <body style="background-color:powderblue;">
+  <body>
     <header>
   <div class="collapse bg-dark" id="navbarHeader">
     <div class="container">
@@ -119,47 +78,51 @@
   </div>
 </header>
 
-{% if isPending %}
-<main role="main" style="background-color:powderblue;">
-  <div class="album py-5 bg-light">
-      <div class="col-lg-8 border border-success rounded p-4 m-4 mx-auto shashwat4">
-              <div id="mydiv">
-                  <marquee scrollamount="15" behavior="alternate">
-                  <h2 class="col-lg-8 mx-auto">student pending request with you</h2>
-                  </marquee>
-              </div>
-          {% for student in studentUnderYou %}
-        <div class="row  col-lg-8 border border-success rounded p-1 m-1 mx-auto shashwat5">
-           <div class="btn-group p-2 m-1 ">
-               <button type="button" class="btn btn-sm btn-outline-secondary shashwat2">
-                  <div class="col-md-12 ">
-                    <div class="card p-4 m-2 shadow-sm shashwat1 ">
-                      <div class="card-body shashwat ">
-                        <p class="card-text ">
-                            <img src="{{ student.profilePhoto.url}}" height=150 width=350></img>
-                        </p>
-                      </div>
-                    </div>
-                    </div>
-                    <div class="shashwat3 hash" >
-                        {{student.fullName}}&emsp;&emsp;&emsp;{{student.emailId}}
-                    </div>
-              </button>
-          </div>
-          <div class="col-lg-8 mx-auto">
-              <button class="btnn btn1 shashwat" onclick="location.href='/Accounts/accepting/{{student.emailId}}'" type="button">Accept</button>
-              <button class="btnn btn1 shashwat" onclick="location.href='/Accounts/rejecting/{{student.emailId}}'" type="button">Reject</button>
-              <button class="btnn btn1 shashwat" onclick="location.href='/Accounts/studentDetailUrl/{{student.emailId}}'" type="button">See Him</button>
-          </div>
-        </div>
+<main role="main">
 
+  <section class="jumbotron text-center">
+    <div class="container">
+      <img src="{{studentDetailFetched.profilePhoto.url}}" height=200 width=200>
+      <h1>{{studentDetailFetched.fullName}}</h1>
+      <p>
+        <a href= "mailto: {{studentDetailFetched.emailId}}" class="btn btn-primary my-2">Email</a>
+        <!--{% if fromStudentSide %}
+        <marquee behavior="alternate">
+            <a href="/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}">click to request for Tuition</a>
+        </marquee>
+        {% endif %}-->
+      </p>
+    </div>
+  </section>
+<div id="mydiv">
+    <h2 class="col-lg-8 mx-auto">His Tutors</h2>
+</div>
+  <div class="album py-5 bg-light">
+
+    <div class="container">
+      <div class="row">
+          {% for student in detailOfTutorUnder %}
+         <div class="btn-group">
+             <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" onclick="location.href='/Accounts/detailsOfTutor/{{student.emailId}}'">
+                <div class="col-md-1">
+                  <div class="card mb-4 shadow-sm">
+                    <div class="card-body">
+                      <p class="card-text">
+                          <img src="{{ student.profilePhoto.url}}" height=300 width=250></img>
+                      </p>
+                    </div>
+                  </div>
+                          {{student.firstName}}{{student.emailId}}
+
+                  </div>
+            </button>
+        </div>
         {% endfor %}
       </div>
+    </div>
   </div>
 </main>
-{% else %}
-    <h1> Sorry</h1>
-{% endif %}
+
 <footer class="text-muted">
   <div class="container">
     <p class="float-right">

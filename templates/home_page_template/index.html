@@ -170,7 +170,7 @@ function ClearHistory()
                         <li><a href="/Accounts/pendingRequest">Pending Request {{pendingRequest}}
                         </a></li>
                       {% elif foundStudent %}
-                        <li><a href="/">Your Teachers</a></li>
+                        <li><a href="/Accounts/studentDetailUrl/{{student.emailId}}">Your Teachers</a></li>
                         <li><a href="/">Notifications
                         </a></li>
                       {% endif %}

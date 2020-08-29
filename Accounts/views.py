@@ -19,7 +19,7 @@ foundTutor = False
 
 tutorDetailFetched=None
 tutorEmail=None
-
+studentEmail=None
 foundUser=None
 def ifLoggedIn(request):
     print(request.user.is_anonymous)
@@ -32,7 +32,6 @@ def encryptPassword(password):
     hashedPassword = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     return hashedPassword.decode('utf8')
 
-
 def checkPassword(password, hashedPassword):
     password = password.encode('utf-8')
     hashedPassword = hashedPassword.encode('utf-8')
@@ -40,7 +39,6 @@ def checkPassword(password, hashedPassword):
         return True
     else:
         return False
-
 
 def home(request):
     allTutorInOurDatabase=tutorDetails.objects.all()
@@ -64,7 +62,6 @@ def home(request):
             pendingRequest=len(tutorRequestPendingDetail)
             print(pendingRequest)
             return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor':tutor, 'pendingRequest':pendingRequest})
-
 
 def studentLogin(request):
     global student, foundStudent, notfoundStudent
@@ -92,9 +89,6 @@ def studentLogin(request):
             return render(request, 'studentLoginTemplate/index.html', {'notfoundStudent': foundStudent})
     else:
         return render(request, 'studentLoginTemplate/index.html')
-    # except:
-    #     print("some error occured ")
-    #     return render(request,'home_page_template/index.html')
 
 def studentRegister(request):
     if request.method == "POST":
@@ -174,7 +168,6 @@ def tutorRegister(request):
     else:
         return render(request, 'tutorRegisterTemplate/index.html')
 
-
 def tutorLogin(request):
     global tutor, foundUser
     print("printing the request which login page is callint {}".format(request))
@@ -202,7 +195,6 @@ def tutorLogin(request):
     else:
         return render(request, 'tutorLoginTemplate/index.html')
 
-
 def studentLogout(request):
     global student, foundStudent
     student = None
@@ -210,7 +202,6 @@ def studentLogout(request):
     logout(request)
     #ifLoggedIn(request)
     return redirect('/')
-
 
 def tutorLogout(request):
     global tutor, foundTutor
@@ -221,42 +212,32 @@ def tutorLogout(request):
 
 def detailsOfTutor(request,tutor_email):
     global tutorEmail
-    tutorEmail=tutor_email
+    if tutor_email!='album.css':
+        tutorEmail=tutor_email
     detailsOfTutorFetched=tutorDetails.objects.all()
-    # print(detailsOfTutorFetched)
     subjectDetailsTutorFetched=tutorSubjectDetails.objects.all()
-    # print(subjectDetailsTutorFetched)
-    # print("in details of Tutor")
     subjectDetailsTutor=None
     tutorDetailFetched=None
     for a in detailsOfTutorFetched:
-        #print(a.emailId)
         if a.emailId==tutor_email:
             tutorDetailFetched=a
             break
     for a in subjectDetailsTutorFetched:
-        # print(a.emailId)
-        # print("printing tutor email {}".format(tutor_email))
         if a.emailId==tutor_email:
             subjectDetailsTutor=a
             break
-    # print("shashwat")
-    # print(subjectDetailsTutor)
     fromStudentSide = True
     detailOfStudentUnder=[]
     if request.user.username.find(" Tutor")!=-1:
         fromStudentSide=False
-    print("from Student Side{}".format(fromStudentSide))
-    if fromStudentSide==False:
+    if fromStudentSide==True or fromStudentSide==False:
         studentUnder=tutorStudentRelation.objects.filter(tutorEmailId=request.user.email)
-        if len(studentUnder)!=0:
-            studentUnderEmailId=studentUnder.values('studentEmailId')[0]['studentEmailId'].split("##")
-            print(studentUnderEmailId)
-            for EmailId in studentUnderEmailId:
-                val=studentDetails.objects.filter(emailId=EmailId)
-                for v in val:
-                    detailOfStudentUnder.append(v)
-            print(detailOfStudentUnder)
+        for i in range(len(studentUnder)):
+            studentEmail=studentUnder[i].studentEmailId
+            print(studentEmail)
+            studentDB=studentDetails.objects.filter(emailId=studentEmail)
+            for j in range(len(studentDB)):
+                detailOfStudentUnder.append(studentDB[i])
     return render(request,'detailsOfTutorTemplate/index.html',{'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor})
 
 def tutorSubjectDetailsFilling(request):
@@ -310,6 +291,9 @@ def pendingRequest(request):
     isPending=False
     if len(studentUnderYou)!=0:
         isPending=True
+    # if isPending==False:
+    #     return render(request,'demo.html')
+    # else:
     return render(request,'studentPendingRequestTemplate/index.html',{'studentUnderYou':studentUnderYou,'isPending':isPending})
 
 def accepting(request,student_emailId):
@@ -328,3 +312,31 @@ def accepting(request,student_emailId):
         tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
         studentTutorRelation.objects.create(studentEmailId=student_emailId,tutorEmailId=tutor_email)
     return pendingRequest(request)
+
+def rejecting(request,student_emailId):
+    tutor_email=request.user.email
+    if student_emailId!='album.css':
+        tutorRequestPending.objects.filter(tutorEmailId=tutor_email,studentEmailId=student_emailId).delete()
+    return pendingRequest(request)
+
+def studentDetailUrl(request,student_emailId):
+    global studentEmail
+    if student_emailId!='album.css':
+        studentEmail=student_emailId
+        print(studentEmail)
+    studentDetailsDB=studentDetails.objects.filter(emailId=studentEmail)
+    studentDetailFetched=None
+    for i in range(len(studentDetailsDB)):
+        studentDetailFetched=studentDetailsDB[i]
+        break
+    detailOfTutorUnder=[]
+    studentTutorDB=studentTutorRelation.objects.filter(studentEmailId=studentEmail)
+    for i in range(len(studentTutorDB)):
+        tutorEmail=studentTutorDB[i].tutorEmailId
+        tutorDB=tutorDetails.objects.filter(emailId=tutorEmail)
+        for j in range(len(tutorDB)):
+            detailOfTutorUnder.append(tutorDB[j])
+    print("printing data")
+    print(studentDetailFetched.profilePhoto.url)
+    print(detailOfTutorUnder)
+    return render(request,'detailsOfStudentTemplate/index.html',{'detailOfTutorUnder':detailOfTutorUnder,'fromStudentSide':False,'studentDetailFetched':studentDetailFetched})

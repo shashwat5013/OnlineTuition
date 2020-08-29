@@ -98,7 +98,7 @@
 {% if foundStudent %}
 {% else %}
 <div id="mydiv">
-    <h2 class="col-lg-8 mx-auto">Student Under You</h2>
+    <h2 class="col-lg-8 mx-auto">Student Under Him</h2>
 </div>
 {% for student in detailOfStudentUnder %}
   <div class="album py-5 bg-light">
@@ -106,7 +106,7 @@
     <div class="container">
       <div class="row">
          <div class="btn-group">
-             <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4">
+             <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" onclick="location.href='/Accounts/studentDetailUrl/{{student.emailId}}'">
                 <div class="col-md-1">
                   <div class="card mb-4 shadow-sm">
                     <div class="card-body">
