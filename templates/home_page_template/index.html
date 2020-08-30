@@ -3,14 +3,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zxx">
   <head>
-   <SCRIPT LANGUAGE="javascript">
-function ClearHistory()
-{
-     var backlen = history.length;
-     history.go(-backlen);
-     window.location.href = loggedOutPageUrl
-}
-</SCRIPT>
+      <style>
+             .box{
+                width: auto;
+                height: auto;
+                margin: 0px 10px;
+                transition: 1s;
+            }
+            .box:hover{
+                transform: scale(1.15);
+                background: #ff800a;
+                z-index: 2;
+                box-shadow: 2px 2px 2px #000;
+            }
+      </style>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>OnlineTuition Home</title>
@@ -300,19 +306,24 @@ function ClearHistory()
           </div>
           <div class="row">
               {% for tutor in allTutorInOurDatabase %}
-            <div class="col-lg-4 col-md-6 col-sm-6">
-              <div class="single-cat mb-50">
-                  <span>
-                      <img src="{{ tutor.profilePhoto.url}}" height=300 width=250></img>
-                  </span>
-                <div class="cat-cap">
-                  <h5><a href="/Accounts/detailsOfTutor/{{tutor.emailId}}">Name : {{tutor.firstName}} {{tutor.lastName}}</a></h5>
-                  <p>
-                    {{tutor.summary}}
-                  </p>
-                    <a href="/Accounts/detailsOfTutor/{{tutor.emailId}}" class="read-more1">click here to know more about me</a>
-                </div>
-              </div>
+             <div class="btn-group btn " style="background-color:#1C9CF6;">
+                 <div class="container ">
+                     <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" style="background-color:#872EC4;" onclick="location.href='/Accounts/detailsOfTutor/{{student.emailId}}'">
+                        <div class="col-md-12" style="background-color:#872EC4;">
+                          <div class="box">
+                              <div class="card mb-3 shadow-sm" style="background-color:#FFD52E; widht:100%;" >
+                                <div class="card-body" style="width:100%">
+                                  <p class="card-text box">
+                                      <img src="{{ tutor.profilePhoto.url}}" height=300 width=250></img>
+                                  </p>
+                                </div>
+                            </div>
+                          </div>
+                                     <p class="text-center" href="/Accounts/detailsOfTutor/{{tutor.emailId}}" style="background-color:#CD201F; color:yellow;"> {{tutor.firstName}}</p>
+                          </div>
+                    </button>
+
+                 </div>
             </div>
             {% endfor %}
           </div>
