@@ -95,18 +95,18 @@
 
 <main role="main" >
     <div class="card-body" style="background-color:#DFD4CA;">
-        <section class="jumbotron text-center" style="background-color:#4A89F3;">
-          <div class="container">
-              <div class="mx-auto" style="background-color:#FFD52E; height:240px; width:240px;">
-                  <div class="card-body">
-                      <img src="{{studentDetailFetched.profilePhoto.url}}" height=200 width=200>
-                  </div>
-              </div>
-              <h1>{{studentDetailFetched.firstName}}</h1>
+        <section class="jumbotron mx-auto" style="background-color:#4A89F3;">
+          <div class="container mx-auto">
+              <img src="{{studentDetailFetched.profilePhoto.url}}" height=200 width=200>
+              <h1>{{studentDetailFetched.fullName}}</h1>
             <p>
-              <a href= "mailto: {{studentDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email</a>
-              <br>
-          </p>
+              <a href= "mailto: {{studentDetailFetched.emailId}}" class="btn btn-primary my-2">Email</a>
+              <!--{% if fromStudentSide %}
+              <marquee behavior="alternate">
+                  <a href="/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}">click to request for Tuition</a>
+              </marquee>
+              {% endif %}-->
+            </p>
           </div>
         </section>
     <div class="card-body" style="background-color:#4A89F3; width:100%" >
