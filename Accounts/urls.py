@@ -19,4 +19,6 @@ urlpatterns = [
     path('accepting/<str:student_emailId>',views.accepting, name='accepting'),
     path('rejecting/<str:student_emailId>',views.rejecting, name='rejecting'),
     path('studentDetailUrl/<str:student_emailId>',views.studentDetailUrl, name='studentDetailUrl'),
+    path('requestStatusUrl',views.requestStatusUrl, name='requestStatusUrl'),
+
 ]

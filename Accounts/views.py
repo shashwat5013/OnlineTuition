@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
+from Accounts.models import studentRequestRejected, studentRequestPendingPayment
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -84,7 +85,8 @@ def studentLogin(request):
             login(request, user)
             allTutorInOurDatabase=tutorDetails.objects.all()
             foundStudent=ifLoggedIn(request)
-            return render(request, 'home_page_template/index.html', {'foundStudent': foundStudent, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
+            #return render(request, 'home_page_template/index.html', {'foundStudent': foundStudent, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
+            return redirect('/')
         else:
             return render(request, 'studentLoginTemplate/index.html', {'notfoundStudent': foundStudent})
     else:
@@ -140,7 +142,7 @@ def tutorRegister(request):
         emailId = request.POST['emailId']
         gender = request.POST['gender']
         profilePhoto = request.POST['profilePhoto']
-        profilePhoto='tutorProfile/'+profilePhoto
+        profilePhoto='studentProfile/'+profilePhoto
         print(profilePhoto)
         if password != repeatPassword:
             messages.info(request, 'password')
@@ -189,7 +191,8 @@ def tutorLogin(request):
             user = authenticate(username=userName, password=password)
             login(request, user)
             #return render(request, 'home_page_template/index.html', {'foundTutor': True, 'tutor': tutor})
-            return home(request)
+            #return home(request)
+            return redirect('/')
         else:
             return render(request, 'tutorLoginTemplate/index.html', {'notfoundTutor': True})
     else:
@@ -212,6 +215,8 @@ def tutorLogout(request):
 
 def detailsOfTutor(request,tutor_email):
     global tutorEmail
+    if request.user.is_anonymous:
+        return redirect('/')
     if tutor_email!='album.css':
         tutorEmail=tutor_email
     detailsOfTutorFetched=tutorDetails.objects.all()
@@ -309,8 +314,8 @@ def accepting(request,student_emailId):
         for s in checkTutor:
             if s.studentEmailId==student_emailId:
                 return pendingRequest(request)
-        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
-        studentTutorRelation.objects.create(studentEmailId=student_emailId,tutorEmailId=tutor_email)
+        #tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
+        studentRequestPendingPayment.objects.create(studentEmailId=student_emailId,tutorEmailId=tutor_email)
     return pendingRequest(request)
 
 def rejecting(request,student_emailId):
@@ -340,3 +345,8 @@ def studentDetailUrl(request,student_emailId):
     print(studentDetailFetched.profilePhoto.url)
     print(detailOfTutorUnder)
     return render(request,'detailsOfStudentTemplate/index.html',{'detailOfTutorUnder':detailOfTutorUnder,'fromStudentSide':False,'studentDetailFetched':studentDetailFetched})
+
+def requestStatusUrl(request):
+    student_emailId=request.user.email
+    print(student_emailId)
+    return render(request,'studentRequestStatusTemplate/index.html')

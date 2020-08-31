@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
-    <title>Know Your Teacher</title>
+    <title>Pending Request with You</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/album/">
 
@@ -33,40 +33,16 @@
         -ms-user-select: none;
         user-select: none;
       }
-      #mydiv{
-          background-color:#7CFC00;
-      }
-      .boxx{
-       width: auto;
-       height: auto;
-        margin: 0px 10px;
-        transition: 1s;
-   }
-    .boxx:hover{
-        transform: scale(1.5);
-        background: #ff800a;
-        z-index: 2;
-        box-shadow: 2px 2px 2px #000;
-    }
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
           font-size: 3.5rem;
         }
       }
-      .btn1{
-          color: #3498db;
-      }
-      .btn1:hover{
-          color: black;
-          background-color: #00ffff;
-      }
-      .shashwat{
-          background-color: yellow;
-      }
       .box{
           position: relative;
           top: 100px;
           left: 50%;
+          right: 50%;
           transform: translate(-50%, -50%);
           padding: 20px;
           box-sizing: border-box;
@@ -98,7 +74,7 @@
     <!-- Custom styles for this template -->
     <link href="album.css" rel="stylesheet">
   </head>
-  <body>
+  <body style="background-color:powderblue;">
     <header>
   <div class="collapse bg-dark" id="navbarHeader">
     <div class="container">
@@ -121,7 +97,7 @@
   <div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
       <a href="/" class="navbar-brand d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewboxx="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <strong>Click for Home</strong>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,74 +107,47 @@
   </div>
 </header>
 
-<main role="main">
-  <div class="container p-20 m-20">
-      <section class="jumbotron text-center" style="background-color:red;">
-        <div class="box">
-            <div class="imgBx">
-                <img src="{{tutorDetailFetched.profilePhoto.url}}" height="200px" width="240px">
-            </div>
-            <div class="content mx-auto">
-                <h2>{{tutorDetailFetched.firstName}}&emsp;&emsp;{{tutorDetailFetched.lastName}}</h2>
-                <p>
-                    <div class="alert alert-success">
-                        <strong>Email</strong> {{tutorDetailFetched.emailId}}
-                    </div>
-                    <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email
-                    </a>
-                    {% if fromStudentSide %}
-                         <button class="btn btn-primary my-8" onclick="location.href='/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}'" style="background-color:#FE6726; widht:600px;" type="button">
-                             Request Tuition
-                         </button>
-                    {% endif %}
-                </p>
-            </div>
+<div class="col-lg-8 alert alert-success  rounded p-4 m-4 mx-auto">
+    <nav>
+        <div class="nav nav-tab mb-3 mt-3" id="nav-tab" role="tablist" >
+            <a class="nav-link active p-2 m-2" id="nav-home-tab" style="background-color:pink;" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+                Rejected
+            </a>
+            <a class="nav-link p-2 m-2" id="nav-profile-tab" data-toggle="tab" style="background-color:pink;" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
+                Fees Pending
+            </a>
         </div>
-      </section>
-  </div>
-  <div class="container p-8 m-8" style="background-color:red;" >
-      {% if foundStudent %}
-      {% else %}
-      <br>
-      <div class="p-1 m-1">
-          <strong>
-              <p class="d-inline bg-dark text-white col-lg-3 alert alert-primary border border-success text-capitalize" style="background-color: #6BFF07; font-size:20px;">
-                  Students Under Him
-              </p>
-          </strong>
-      </div>
-      {% for student in detailOfStudentUnder %}
-      <div class="btn-group btn p-2 m-2" style="background-color:#1C9CF6;">
-         <div class="container">
-             <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" style="background-color:#872EC4;" onclick="location.href='/Accounts/studentDetailUrl/{{student.emailId}}'">
-                <div class="col-md-12" style="background-color:#872EC4;">
-                  <div class="boxx">
-                      <div class="card mb-3 shadow-sm " style="background-color:#FFD52E; widht:100%;" >
-                        <div class="card-body " style="width:100%">
-                          <p class="card-text boxx">
-                              <img src="{{ student.profilePhoto.url}}" height=100 width=100></img>
-                          </p>
+    </nav>
+        <div class="tab-content text-justify text-center" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="border border-success rounded" style="background-color: yellow">
+                        <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;">
+                            <div class="box p-4 m-4 border border-success" style="widht: 0%">
+                            <div class="imgBx">
+                                <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
+                            </div>
+                            <div class="content mx-auto">
+                                <h2>{{tutorDetailFetched.firstName}}&emsp;&emsp;{{tutorDetailFetched.lastName}}</h2>
+                                <p>
+
+                                        <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email</a>
+
+                                        <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Pay Fees</a>
+
+                                </p>
+                            </div>
                         </div>
                     </div>
-                  </div>
-                             <p class="text-center text-capitalize border border-success" href="/Accounts/detailsOfTutor/{{student.emailId}}" style="background-color:#CD201F; color:yellow; padding:2px;"> {{student.fullName}}</p>
-                  </div>
-            </button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                rejecting
+            </div>
+        </div>
 
-         </div>
-      </div>
-      {% endfor %}
-      {% endif %}
-  </div>
-</main>
-
-<footer class="text-muted">
-  <div class="container">
-    <p class="float-right">
-      <a href="#">Back to top</a>
-    </p>
 </div>
-</footer>
+
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>

@@ -21,7 +21,7 @@ class tutorDetails(models.Model):
     password         = models.CharField(max_length=10000 , null=True)
     emailId          = models.EmailField(max_length=254,primary_key=True)
     gender           = models.CharField(max_length=10, null=True)
-    profilePhoto     = models.ImageField(upload_to='tutorProfile', null=False)
+    profilePhoto     = models.ImageField(upload_to='studentProfile', null=False)
     userName         = models.CharField(max_length=100)
 
     def __str__(self):
@@ -57,5 +57,13 @@ class tutorRequestPending(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
 
 class studentRequestFulfilled(models.Model):
+    studentEmailId    = models.EmailField(max_length=254)
+    tutorEmailId      = models.EmailField(max_length=254)
+
+class studentRequestPendingPayment(models.Model):
+    studentEmailId    = models.EmailField(max_length=254)
+    tutorEmailId      = models.EmailField(max_length=254)
+
+class studentRequestRejected(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)

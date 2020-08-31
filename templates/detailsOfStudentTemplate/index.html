@@ -33,9 +33,12 @@
         -ms-user-select: none;
         user-select: none;
       }
-      #mydiv{
-          background-color:#7CFC00;
+      body{
+          margin: 0;
+          padding: 0;
+          font-family: sans-serif;
       }
+
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
           font-size: 3.5rem;
@@ -45,17 +48,62 @@
           color: black;
           background-color: #000000;
       }
-      .box{
+      .boxx{
 		width: auto;
 		height: auto;
         margin: 0px 10px;
         transition: 1s;
 	}
-    .box:hover{
+    .boxx:hover{
         transform: scale(1.5);
         background: #ff800a;
         z-index: 2;
         box-shadow: 2px 2px 2px #000;
+    }
+    .container{
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        transition: 0.5s;
+    }
+    .container:hover{
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+    .card-body{
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        transition: 0.5s;
+    }
+    .card-body:hover{
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+    .box{
+        position: relative;
+        top: 100px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 20px;
+        box-sizing: border-box;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        display: flex;
+        transition: 0.5s;
+    }
+    .box:hover{
+        box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+    }
+    .box .imBx {
+            flex: 0 0 150px;
+    }
+    .box .content{
+        padding-left: 20px;
+    }
+    .box .content h2{
+        margin: 0;
+        padding-left: 0;
+        color:#ff005c;
+    }
+    .box .content p{
+        margin: 0;
+        padding: 10px 0 0;
+        text-align:  justify;
     }
     </style>
     <!-- Custom styles for this template -->
@@ -83,7 +131,7 @@
   <div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
       <a href="/" class="navbar-brand d-flex align-items-center">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewboxx="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <strong>Click for Home</strong>
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,22 +142,23 @@
 </header>
 
 <main role="main" >
-    <div class="card-body" style="background-color:#DFD4CA;">
-        <section class="jumbotron text-center" style="background-color:#4A89F3;">
-          <div class="container">
-              <div class="mx-auto" style="background-color:#FFD52E; height:240px; width:240px;">
-                  <div class="card-body">
-                      <img src="{{studentDetailFetched.profilePhoto.url}}" height=200 width=200>
-                  </div>
+    <div class="card-body" style="background-color:##ff005c;">
+        <section class="jumbotron text-center" style="background-color:yellow;">
+          <div class="box">
+              <div class="imgBx">
+                  <img src="{{studentDetailFetched.profilePhoto.url}}" height="200px" width="240px">
               </div>
-              <h1>{{studentDetailFetched.firstName}}</h1>
-            <p>
-              <a href= "mailto: {{studentDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email</a>
-              <br>
-          </p>
+              <div class="content mx-auto">
+                  <h2>{{studentDetailFetched.fullName}}</h2>
+                  <p>
+                      <div class="alert alert-success">
+                          <strong>Email</strong> {{studentDetailFetched.emailId}}
+                      </div>
+                  </p>
+              </div>
           </div>
         </section>
-    <div class="card-body" style="background-color:#4A89F3; width:100%" >
+    <div class="card-body" style="background-color:yellow; width:100%" >
         <div class="p-1 m-3">
             <strong>
                 <p class="d-inline bg-dark text-white col-lg-3 alert alert-primary border border-success text-capitalize" style="background-color: #6BFF07; font-size:20px;">
@@ -118,16 +167,16 @@
             </strong>
         </div>
           <div class="container card-body" style="background-color:#4A89F3;">
-            <div class="row" style="background-color:#4A89F3;">
+            <div class="row" style="background-color:#4A89F3; margin:20px;">
                 {% for student in detailOfTutorUnder %}
-               <div class="btn-group btn " style="background-color:#1C9CF6;">
-                   <div class="container">
-                       <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" style="background-color:#872EC4;" onclick="location.href='/Accounts/detailsOfTutor/{{student.emailId}}'">
-                          <div class="col-md-12" style="background-color:#872EC4;">
-                            <div class="box">
+               <div class="btn-group btn" style="background-color:#4A89F3;">
+                   <div class="container" style="background-color:#ff005c; margin:20px;">
+                       <button type="button" class="btn btn-sm btn-outline-secondary p-2 m-2" style="background-color:#872EC4;" onclick="location.href='/Accounts/detailsOfTutor/{{student.emailId}}'">
+                          <div class="col-md-12 boxx" style="background-color:#872EC4;">
+                            <div >
                                 <div class="card mb-3 shadow-sm" style="background-color:#FFD52E; widht:100%;" >
                                   <div class="card-body" style="width:100%">
-                                    <p class="card-text box">
+                                    <p class="card-text boxx">
                                         <img src="{{ student.profilePhoto.url}}" height=100 width=100></img>
                                     </p>
                                   </div>
