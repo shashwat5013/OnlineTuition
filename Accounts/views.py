@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
-from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer
+from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer, teacherReview
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -243,7 +243,22 @@ def detailsOfTutor(request,tutor_email):
             studentDB=studentDetails.objects.filter(emailId=studentEmail)
             for j in range(len(studentDB)):
                 detailOfStudentUnder.append(studentDB[i])
-    return render(request,'detailsOfTutorTemplate/index.html',{'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor})
+    hisStudent=False
+    if fromStudentSide==True:
+        studentEmail=request.user.email
+        if tutorStudentRelation.objects.filter(tutorEmailId=tutorEmail,studentEmailId=studentEmail).exists():
+            hisStudent=True
+    reviewDB=teacherReview.objects.filter(tutorEmailId=tutorEmail)
+    print(reviewDB)
+    reviewDetails=list()
+    for rr in reviewDB:
+        print(reviewDetails.append(rr))
+    numberOfReviews=len(reviewDB)
+    print(reviewDetails)
+    noStudent=True
+    if len(detailOfStudentUnder)==0:
+        noStudent=False
+    return render(request,'detailsOfTutorTemplate/index.html',{'noStudent':noStudent,'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor,'hisStudent':hisStudent,'reviewDetails':reviewDetails})
 
 def tutorSubjectDetailsFilling(request):
     tutor=None
@@ -403,3 +418,48 @@ def studentRequestPendingPaymentUrl(request):
     studentRequestPendingPaymentDetails=json.dumps(studentRequestPendingPaymentDetails)
     print(studentRequestPendingPaymentDetails)
     return HttpResponse(studentRequestPendingPaymentDetails)
+
+def reviewSentimentAnalysis(request):
+    review=request.GET['review']
+    print(review);
+    class reviewAnalysis:
+        def reviewSentimentAnalysisFunction(self,review):
+            import re
+            import nltk
+            import  pickle
+            from nltk.corpus import stopwords
+            from nltk.stem.porter import PorterStemmer
+            ps = PorterStemmer()
+            corpus = []
+
+            filename = 'C:/Users/shash/Desktop/Data_Science/dataScience/SentimentAnalysis/nlp_model.pkl'
+            clf = pickle.load(open(filename, 'rb'))
+            vectorizer = pickle.load(open('C:/Users/shash/Desktop/Data_Science/dataScience/SentimentAnalysis/tranform.pkl','rb'))
+
+            m=list()
+            m.append(review)
+            c=[]
+            for i in range(0, len(m)):
+                review = re.sub('[^a-zA-Z]', ' ', m[i])
+                review = review.lower()
+                review = review.split()
+                review = [ps.stem(word) for word in review if not word in stopwords.words('english')]
+                review = ' '.join(review)
+                c.append(review)
+
+            X_user = vectorizer.transform(c).toarray()
+            y_user=clf.predict(X_user)
+            if y_user==1:
+                return 1
+            else:
+                return 0
+    r=reviewAnalysis()
+    val=r.reviewSentimentAnalysisFunction(review);
+    if val==0:
+        rr=False
+    else:
+        rr=True
+    if request.user.email!="album.css":
+        teacherReview.objects.create(studentEmailId=request.user.email,tutorEmailId=request.GET['tutor_email'],review=review,points=val,numberOfReviews=rr);
+        print("done")
+    return HttpResponse("done")

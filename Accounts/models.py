@@ -69,6 +69,12 @@ class studentRequestRejected(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
 
+class teacherReview(models.Model):
+    studentEmailId    = models.EmailField(max_length=254)
+    tutorEmailId      = models.EmailField(max_length=254)
+    review          =  models.CharField(max_length=10000 , null=True, default=" ")
+    points= models.IntegerField(default=0)
+    numberOfReviews = models.BooleanField(default=True)
 
 class rejectedRequestSerializer(serializers.Serializer):
     firstName         = serializers.CharField(max_length=100)
