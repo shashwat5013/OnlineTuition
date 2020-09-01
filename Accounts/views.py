@@ -2,13 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
-from Accounts.models import studentRequestRejected, studentRequestPendingPayment
+from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate, login, logout
-
-
+import json
 
 student = None
 foundStudent = False
@@ -128,7 +127,8 @@ def studentRegister(request):
                     break
         print(foundStudent)
         print(student)
-        return render(request, 'home_page_template/index.html', {'foundStudent': foundStudent, 'student':student})
+        #return render(request, 'home_page_template/index.html', {'foundStudent': foundStudent, 'student':student})
+        return redirect('/')
     else:
         return render(request, 'studentRegisterTemplate/index.html')
 
@@ -314,14 +314,17 @@ def accepting(request,student_emailId):
         for s in checkTutor:
             if s.studentEmailId==student_emailId:
                 return pendingRequest(request)
-        #tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
+        studentTutorRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
+        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_emailId)
         studentRequestPendingPayment.objects.create(studentEmailId=student_emailId,tutorEmailId=tutor_email)
     return pendingRequest(request)
 
 def rejecting(request,student_emailId):
-    tutor_email=request.user.email
+    global tutorEmail
+    tutorEmail=request.user.email
     if student_emailId!='album.css':
-        tutorRequestPending.objects.filter(tutorEmailId=tutor_email,studentEmailId=student_emailId).delete()
+        studentRequestRejected.objects.create(studentEmailId=student_emailId,tutorEmailId=tutorEmail)
+        tutorRequestPending.objects.filter(tutorEmailId=tutorEmail,studentEmailId=student_emailId).delete()
     return pendingRequest(request)
 
 def studentDetailUrl(request,student_emailId):
@@ -347,6 +350,56 @@ def studentDetailUrl(request,student_emailId):
     return render(request,'detailsOfStudentTemplate/index.html',{'detailOfTutorUnder':detailOfTutorUnder,'fromStudentSide':False,'studentDetailFetched':studentDetailFetched})
 
 def requestStatusUrl(request):
-    student_emailId=request.user.email
-    print(student_emailId)
-    return render(request,'studentRequestStatusTemplate/index.html')
+    studentEmail=request.user.email
+    print(studentEmail)
+    pendingRequestDB=tutorRequestPending.objects.filter(studentEmailId=studentEmail)
+    #print(pendingRequestDB)
+    pendingRequestDetails=[]
+    for pending in pendingRequestDB:
+        if pending.studentEmailId==studentEmail:
+            data=tutorDetails.objects.filter(emailId=pending.tutorEmailId)
+            for d in data:
+                pendingRequestDetails.append(d)
+    print(pendingRequestDetails)
+    return render(request,'studentRequestStatusTemplate/index.html',{'pendingRequestDetails':pendingRequestDetails})
+
+def studentPendingRequestUrl(request):
+    studentEmail=request.user.email
+    studentRejectedDB=tutorRequestPending.objects.filter(studentEmailId=studentEmail)
+    print("data")
+    print(studentRejectedDB)
+    studentRequestRejectedDetails=list()
+    for rejected in studentRejectedDB:
+        dataa=tutorDetails.objects.filter(emailId=rejected.tutorEmailId)
+        for d in dataa:
+            ser=rejectedRequestSerializer(d)
+            studentRequestRejectedDetails.append(ser.data)
+    studentRequestRejectedDetails=json.dumps(studentRequestRejectedDetails)
+    print(studentRequestRejectedDetails)
+    return HttpResponse(studentRequestRejectedDetails)
+
+def studentRequestRejectedUrl(request):
+    studentEmail=request.user.email
+    studentRejectedDB=studentRequestRejected.objects.filter(studentEmailId=studentEmail)
+    studentRequestRejectedDetails=list()
+    for rejected in studentRejectedDB:
+        dataa=tutorDetails.objects.filter(emailId=rejected.tutorEmailId)
+        for d in dataa:
+            ser=rejectedRequestSerializer(d)
+            studentRequestRejectedDetails.append(ser.data)
+    studentRequestRejectedDetails=json.dumps(studentRequestRejectedDetails)
+    return HttpResponse(studentRequestRejectedDetails)
+
+
+def studentRequestPendingPaymentUrl(request):
+    studentEmail=request.user.email
+    studentRejectedDB=studentRequestPendingPayment.objects.filter(studentEmailId=studentEmail)
+    studentRequestPendingPaymentDetails=list()
+    for rejected in studentRejectedDB:
+        dataa=tutorDetails.objects.filter(emailId=rejected.tutorEmailId)
+        for d in dataa:
+            ser=rejectedRequestSerializer(d)
+            studentRequestPendingPaymentDetails.append(ser.data)
+    studentRequestPendingPaymentDetails=json.dumps(studentRequestPendingPaymentDetails)
+    print(studentRequestPendingPaymentDetails)
+    return HttpResponse(studentRequestPendingPaymentDetails)

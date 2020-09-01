@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -41,8 +42,7 @@
       .box{
           position: relative;
           top: 100px;
-          left: 50%;
-          right: 50%;
+          left: 40%;
           transform: translate(-50%, -50%);
           padding: 20px;
           box-sizing: border-box;
@@ -56,6 +56,9 @@
       }
       .box .imBx {
               flex: 0 0 150px;
+              position: relative;
+              top: 100px;
+              left: 80%;
       }
       .box .content{
           padding-left: 20px;
@@ -108,46 +111,342 @@
 </header>
 
 <div class="col-lg-8 alert alert-success  rounded p-4 m-4 mx-auto">
-    <nav>
-        <div class="nav nav-tab mb-3 mt-3" id="nav-tab" role="tablist" >
-            <a class="nav-link active p-2 m-2" id="nav-home-tab" style="background-color:pink;" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
-                Rejected
-            </a>
-            <a class="nav-link p-2 m-2" id="nav-profile-tab" data-toggle="tab" style="background-color:pink;" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">
-                Fees Pending
-            </a>
-        </div>
-    </nav>
-        <div class="tab-content text-justify text-center" id="nav-tabContent">
-            <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                <div class="border border-success rounded" style="background-color: yellow">
-                        <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;">
-                            <div class="box p-4 m-4 border border-success" style="widht: 0%">
-                            <div class="imgBx">
-                                <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
-                            </div>
-                            <div class="content mx-auto">
-                                <h2>{{tutorDetailFetched.firstName}}&emsp;&emsp;{{tutorDetailFetched.lastName}}</h2>
-                                <p>
-
-                                        <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email</a>
-
-                                        <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Pay Fees</a>
-
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                rejecting
+    <nav class="border border-success rounded">
+        <div class="border border-success rounded p-4 mx-auto" style="background-color:grey;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-link active alert alert-success" id="nav-home-tab" style="background-color:orange; color:white;" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Pending</a>
+              <a class="nav-link alert alert-success" id="nav-profile-tab" style="background-color:red; color:white;" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Rejcted</a>
+              <a class="nav-link alert alert-success" id="nav-contact-tab" style="background-color:#98c912; color:white;" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Accepted/Fees Pending</a>
             </div>
         </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+      <!-- {% for tutorDetailFetched in pendingRequestDetails %}
+      <div class="border border-success rounded" style="background-color: yellow">
+          <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;">
+              <div class="box p-4 m-4 border border-success" style="width: 80%">
+                  <div class="imgBx">
+                      <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
+                  </div>
+                  <div class="content mx-auto text-justify">
+                      <h2>{{tutorDetailFetched.firstName}}</h2>
+                      <p>
 
+                          <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email for Acceptance</a>
+
+                          <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Pay Fees</a>
+
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endfor %} -->
+      <div class="tab-pane fade show active" id="nav-homeSecond" role="tabpanel" aria-labelledby="nav-home-tab">
+      </div>
+  </div>
+  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+      <div class="tab-pane fade show active" id="nav-profileSecond" role="tabpanel" aria-labelledby="nav-home-tab">
+      </div>
+ </div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+      <div class="tab-pane fade show active" id="nav-contactSecond" role="tabpanel" aria-labelledby="nav-home-tab">
+      </div>
+  </div>
 </div>
+<script src="{% static 'studentRequestStatus/js/jquery-3.5.1.min.js' %}"></script>
 
+<script type="text/javascript"]>
+window.onload=initAll;
+var rejected;
+var count=0;
+function initAll() {
+    rejected=document.getElementById('nav-profile-tab');
+    rejected.onclick=rejectionStatus;
+    pending=document.getElementById('nav-contact-tab');
+    pending.onclick=pendingStatus;
+    pendingStill=document.getElementById('nav-home-tab');
+    pendingStill.onclick=pendingStillStatus;
+    if(count==0){
+        count=1;
+        pendingStill.click();
+    }
+}
+function pendingStillStatus(){
+    console.log("pendingStillStatus");
+    var req = new XMLHttpRequest();
+    var url = '/Accounts/studentPendingRequestUrl';
+  req.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var data=eval(req.responseText);
+        var divv=document.getElementById('nav-homeSecond');
+        if(typeof(divv)!='undefined' &&  divv!= null){
+            divv.remove();
+        }
+        var divClass=document.getElementById('nav-home');
+        console.log(data);
+        var mainDiv = document.createElement('div');
+        mainDiv.setAttribute('id','nav-homeSecond');
+        mainDiv.classList.add("tab-pane","fade" ,"show","active");
+        for(var i=0;i<data.length;i++){
+            var div1 = document.createElement('div');
+            div1.setAttribute('id','div1'+i);
+            div1.classList.add("border","border-success", "rounded");
+            div1.style.backgroundColor="yellow";
+        //  <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;"> div2
+            var div2= document.createElement('div');
+            div2.setAttribute('id','div2'+i);
+            div2.style.position="relative";
+            div2.style.left="20%";
+            div2.style.right="50%";
+            div2.style.top="60%";
+            div2.style.width="500px";
+            // <button type="button" class="btn btn-sm btn-outline-secondary p-2 m-2"
+            // style="background-color:#872EC4;"
+            // onclick="location.href='/Accounts/detailsOfTutor/{{tutor.emailId}}'">
 
+        //  <div class="box p-4 m-4 border border-success" style="widht: 0%"> div3
+            var div3= document.createElement('div');
+            div3.setAttribute('id','div3'+i);
+            div3.classList.add("box","p-4","m-4","border","border-success");
+            div3.style.width="80%";
+        // <div class="imgBx"> div 31
+        //     <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
+        // </div>
+        var div31= document.createElement('div');
+        div31.setAttribute('id','div31'+i);
+        div31.style.width="0%";
+        div31.classList.add("imgBx");
+
+        var imgD = document.createElement('img');
+        imgD.src=data[i].profilePhoto;
+        imgD.style.height="180px";
+        imgD.style.width="140px";
+        imgD.style.left="40%";
+        imgD.style.position="relative";
+
+    // <div class="content mx-auto text-justify"> div32
+    //     <h2>{{tutorDetailFetched.firstName}}</h2> div321
+    // </div>
+        var div32= document.createElement('div');
+        div32.setAttribute('id','div32'+i);
+        div32.style.position="absolute";
+        div32.style.left="45%";
+        div32.style.top="20%"
+        div32.classList.add("content", "mx-auto","m-8","p-12", "text-justify");
+
+        var div321 = document.createElement('h2');
+        div321.setAttribute('id','div321'+i);
+        div321.style.position="relative";
+        div321.innerHTML=data[i].firstName+" "+data[i].lastName;
+
+        var div322=document.createElement('p');
+        div322.setAttribute('id','div322'+i);
+        // class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;"
+        var div3221 = document.createElement('a');
+        div3221.setAttribute('id','div3221'+i);
+        div3221.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3221.style.backgroundColor="#FE6726";
+        div3221.text="Email for Acceptance";
+        div3221.href="mailto:"+data[i].emailId;
+
+        var div3222 = document.createElement('a');
+        div3222.setAttribute('id','div3222'+i);
+        div3222.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3222.style.backgroundColor="#FE6726";
+        div3222.text="Details";
+        div3222.href="/Accounts/detailsOfTutor/"+data[i].emailId;
+
+        div322.appendChild(div3221);
+        div322.appendChild(div3222);
+        div32.appendChild(div321);
+        div32.appendChild(div322);
+        div3.appendChild(div31);
+        div3.appendChild(div32);
+        div31.appendChild(imgD);
+        div2.appendChild(div3);
+        div1.appendChild(div2);
+        mainDiv.appendChild(div1);
+        }
+        divClass.appendChild(mainDiv);
+    }
+  };
+  req.open("GET", url, true);
+  req.send();
+}
+function rejectionStatus() {
+    var req = new XMLHttpRequest();
+    var url = '/Accounts/studentRequestRejectedUrl';
+  req.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var data=eval(req.responseText);
+        var divv=document.getElementById('nav-profileSecond');
+        if(typeof(divv)!='undefined' &&  divv!= null){
+            divv.remove();
+        }
+        var divClass=document.getElementById('nav-profile');
+        var val="";
+        var mainDiv = document.createElement('div');
+        mainDiv.setAttribute('id','nav-profileSecond');
+        mainDiv.classList.add("tab-pane","fade" ,"show","active");
+        for(var i=0;i<data.length;i++){
+            var div1 = document.createElement('div');
+            div1.setAttribute('id','div1'+i);
+            div1.classList.add("border","border-success", "rounded");
+            div1.style.backgroundColor="yellow";
+        //  <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;"> div2
+            var div2= document.createElement('div');
+            div2.setAttribute('id','div2'+i);
+            div2.style.position="relative";
+            div2.style.left="20%";
+            div2.style.right="50%";
+            div2.style.top="60%";
+            div2.style.width="500px";
+        //  <div class="box p-4 m-4 border border-success" style="widht: 0%"> div3
+            var div3= document.createElement('div');
+            div3.setAttribute('id','div3'+i);
+            div3.classList.add("box","p-4","m-4","border","border-success");
+            div3.style.width="80%";
+        // <div class="imgBx"> div 31
+        //     <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
+        // </div>
+        var div31= document.createElement('div');
+        div31.setAttribute('id','div31'+i);
+        div31.style.width="0%";
+        div31.classList.add("imgBx");
+
+        var imgD = document.createElement('img');
+        imgD.src=data[i].profilePhoto;
+        imgD.style.height="180px";
+        imgD.style.width="140px";
+
+    // <div class="content mx-auto text-justify"> div32
+    //     <h2>{{tutorDetailFetched.firstName}}</h2> div321
+    // </div>
+        var div32= document.createElement('div');
+        div32.setAttribute('id','div32'+i);
+        div32.classList.add("content", "mx-auto","m-4","p-4", "text-justify");
+
+        var div321 = document.createElement('h2');
+        div321.setAttribute('id','div321'+i);
+        div321.style.position="absolute";
+        div321.innerHTML=data[i].firstName;
+
+        var div3222 = document.createElement('a');
+        div3222.setAttribute('id','div3222'+i);
+        div3222.style.position="absolute";
+        div3222.style.top="120px";
+        div3222.style.left="200px";
+        div3222.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3222.style.backgroundColor="#FE6726";
+        div3222.text="Details";
+        div3222.href="/Accounts/detailsOfTutor/"+data[i].emailId;
+
+        div32.appendChild(div321);
+        div32.appendChild(div3222);
+        div3.appendChild(div31);
+        div3.appendChild(div32);
+        div31.appendChild(imgD);
+        div2.appendChild(div3);
+        div1.appendChild(div2);
+        mainDiv.appendChild(div1);
+        }
+        divClass.appendChild(mainDiv);
+    }
+  };
+  req.open("GET", url, true);
+  req.send();
+}
+function pendingStatus(){
+    var req = new XMLHttpRequest();
+    console.log('pending status');
+    var url = '/Accounts/studentRequestPendingPaymentUrl';
+  req.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        var data=eval(req.responseText);
+        var divv=document.getElementById('nav-contactSecond');
+        if(typeof(divv)!='undefined' &&  divv!= null){
+            divv.remove();
+        }
+        var divClass=document.getElementById('nav-contact');
+        var val="";
+        var mainDiv = document.createElement('div');
+        mainDiv.setAttribute('id','nav-contactSecond');
+        mainDiv.classList.add("tab-pane","fade" ,"show","active");
+        for(var i=0;i<data.length;i++){
+            var div1 = document.createElement('div');
+            div1.setAttribute('id','div1'+i);
+            div1.classList.add("border","border-success", "rounded");
+            div1.style.backgroundColor="yellow";
+        //  <div class="" style=" position: relative; left:20%; right:50%; top:60%; width: 500px;"> div2
+            var div2= document.createElement('div');
+            div2.setAttribute('id','div2'+i);
+            div2.style.position="relative";
+            div2.style.left="20%";
+            div2.style.right="50%";
+            div2.style.top="60%";
+            div2.style.width="500px";
+        //  <div class="box p-4 m-4 border border-success" style="widht: 0%"> div3
+            var div3= document.createElement('div');
+            div3.setAttribute('id','div3'+i);
+            div3.classList.add("box","p-4","m-4","border","border-success");
+            div3.style.width="80%";
+        // <div class="imgBx"> div 31
+        //     <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
+        // </div>
+        var div31= document.createElement('div');
+        div31.setAttribute('id','div31'+i);
+        div31.style.width="0%";
+        div31.classList.add("imgBx");
+
+        var imgD = document.createElement('img');
+        imgD.src=data[i].profilePhoto;
+        imgD.style.height="180px";
+        imgD.style.width="140px";
+
+    // <div class="content mx-auto text-justify"> div32
+    //     <h2>{{tutorDetailFetched.firstName}}</h2> div321
+    // </div>
+        var div32= document.createElement('div');
+        div32.setAttribute('id','div32'+i);
+        div32.style.position="absolute";
+        div32.style.left="45%";
+        div32.style.top="0%"
+        div32.classList.add("content", "mx-auto","m-4","p-4", "text-justify");
+
+        var div321 = document.createElement('h2');
+        div321.setAttribute('id','div321'+i);
+        div321.style.position="relative";
+        div321.innerHTML=data[i].firstName;
+
+        var div322=document.createElement('p');
+        div322.setAttribute('id','div322'+i);
+        // class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;"
+        var div3221 = document.createElement('a');
+        div3221.setAttribute('id','div3221'+i);
+        div3221.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3221.style.backgroundColor="#FE6726";
+        div3221.text="pay Fees";
+
+        div322.appendChild(div3221);
+        div32.appendChild(div321);
+        div32.appendChild(div322);
+        div3.appendChild(div31);
+        div3.appendChild(div32);
+        div31.appendChild(imgD);
+        div2.appendChild(div3);
+        div1.appendChild(div2);
+        mainDiv.appendChild(div1);
+        }
+        divClass.appendChild(mainDiv);
+        console.log(divClass);
+    }
+  };
+  req.open("GET", url, true);
+  req.send();
+}
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>

@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from django.db import models
 
 # Create your models here.
@@ -67,3 +68,10 @@ class studentRequestPendingPayment(models.Model):
 class studentRequestRejected(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
+
+
+class rejectedRequestSerializer(serializers.Serializer):
+    firstName         = serializers.CharField(max_length=100)
+    lastName         = serializers.CharField(max_length=100)
+    emailId          = serializers.EmailField(max_length=254)
+    profilePhoto     = serializers.ImageField()

@@ -20,5 +20,8 @@ urlpatterns = [
     path('rejecting/<str:student_emailId>',views.rejecting, name='rejecting'),
     path('studentDetailUrl/<str:student_emailId>',views.studentDetailUrl, name='studentDetailUrl'),
     path('requestStatusUrl',views.requestStatusUrl, name='requestStatusUrl'),
+    path('studentRequestRejectedUrl', views.studentRequestRejectedUrl,name='studentRequestRejectedUrl'),
+    path('studentRequestPendingPaymentUrl', views.studentRequestPendingPaymentUrl,name='studentRequestPendingPaymentUrl'),
+    path('studentPendingRequestUrl', views.studentPendingRequestUrl,name='studentPendingRequestUrl'),
 
 ]
