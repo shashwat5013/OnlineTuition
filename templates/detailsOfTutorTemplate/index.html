@@ -162,7 +162,8 @@
         </div>
       </section>
   </div>
-  <div class="" id="commentInput">
+  <div class="" id="commentInputMain">
+
   </div>
   <div class="container p-8 m-8" id="uppermost" style="background-color:red; height:200%" >
       {% if foundStudent %}
@@ -251,7 +252,7 @@ function initAll(){
     reviewButton.onclick=reviewInput;
 }
 function reviewInput(){
-    mainDiv=document.getElementById('commentInput');
+    var mainDiv=document.getElementById('commentInputMain');
     var div1=document.createElement('div');
     div1.classList.add("container","mx-auto","p-2","m-2");
     div1.style.backgroundColor="yellow";
@@ -357,15 +358,17 @@ function reviewInput(){
                     div1132.style.width="120px";
 
                     var div1133 = document.createElement('img');
-                    div1133.src="{% static 'detailsOfTutor/good.jpg'%}";
+                    div1133.src="{% static 'detailsOfTutor/bad.jpg'%}";
                     div1133.style.height="100px";
                     div1133.style.width="120px";
 
                     div112.appendChild(div1131);
                     div113.appendChild(div1141);
+                    console.log(shashwat[i].review+" "+shashwat[i].numberOfReviews);
                     if (shashwat[i].numberOfReviews==true)
-                        div113.appendChild(div1132);
-                    else div113.appendChild(div1133);
+                        {div113.appendChild(div1132);
+                        console.log(div113);}
+                    else {div113.appendChild(div1133); console.log(div113);}
 
                     div11.appendChild(div111);
                     div11.appendChild(div112);
@@ -377,6 +380,8 @@ function reviewInput(){
               upper.appendChild(myId);
               var commentBox= document.getElementById('commentInput');
               commentBox.remove();
+              console.log('value deleted');
+              console.log(commentBox);
             }
         };
         req.open("GET", url, true);
@@ -387,7 +392,11 @@ function reviewInput(){
     div2.appendChild(div4);
     div2.appendChild(div5);
     div1.appendChild(div2);
-    mainDiv.appendChild(div1);
+    var com=document.createElement('div');
+    com.setAttribute('id','commentInput');
+    com.appendChild(div1);
+    console.log(div1);
+    mainDiv.appendChild(com);
 }
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

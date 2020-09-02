@@ -473,7 +473,7 @@ def reviewSentimentAnalysis(request):
         rr=True
     if request.user.email!="album.css":
         teacherReview.objects.create(studentEmailId=request.user.email,tutorEmailId=request.GET['tutor_email'],review=review,points=val,numberOfReviews=rr);
-    reviewDB=teacherReview.objects.filter(studentEmailId=request.user.email)
+    reviewDB=teacherReview.objects.filter(studentEmailId=request.user.email,tutorEmailId=request.GET['tutor_email'])
     print(reviewDB)
     reviewDetails=list()
     for rejected in reviewDB:
