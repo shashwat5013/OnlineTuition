@@ -27,39 +27,37 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="subjectName1">Subject 1</label>
-                                <input type="text" class="form-input" name="subjectName1" id="first_name" />
+                                <input type="text" class="form-input" name="subjectName1" id="first_subject" />
                             </div>
                               <div class="form-group">
                                 <label for="hourlyPrice1">Hourly Price</label>
-                                <input type="text" class="form-input" name="hourlyPrice1" id="first_name" />
+                                <input type="text" class="form-input" name="hourlyPrice1" id="first_price" />
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="subjectName2">Subject 2</label>
-                                <input type="text" class="form-input" name="subjectName2" id="first_name" />
+                                <input type="text" class="form-input" name="subjectName2" id="second_subject" />
                             </div>
                             <div class="form-group">
                                 <label for="hourlyPrice2">Hourly Price</label>
-                                <input type="text" class="form-input" name="hourlyPrice2" id="first_name" />
+                                <input type="text" class="form-input" name="hourlyPrice2" id="second_price" />
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="subjectName3">Subject 3</label>
-                                <input type="text" class="form-input" name="subjectName3" id="first_name" />
+                                <input type="text" class="form-input" name="subjectName3" id="third_subject" />
                             </div>
                              <div class="form-group">
                                 <label for="hourlyPrice3">Hourly Price</label>
-                                <input type="text" class="form-input" name="hourlyPrice3" id="first_name" />
+                                <input type="text" class="form-input" name="hourlyPrice3" id="third_price" />
                             </div>
                         </div>
                         <div class="form-row">
-
-
                             <div class="form-group">
                                 <label for="city">Address</label>
-                                <input type="text" class="form-input" name="address" id="last_name" />
+                                <input type="text" class="form-input" name="address" id="address" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -69,7 +67,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="summary">Write about yourself </label>
-                                <input type="text" class="form-input" name="summary" id="password"/>
+                                <input type="text" class="form-input" name="summary" id="about_yourself"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -88,5 +86,48 @@
     <script src=" {% static 'tutorSubjectDetails/vendor/jquery-validation/dist/jquery.validate.min.js' %}"></script>
     <script src=" {% static 'tutorSubjectDetails/vendor/jquery-validation/dist/additional-methods.min.js' %}"></script>
     <script src=" {% static 'tutorSubjectDetails/js/main.js' %}"></script>
+    <script type="text/javascript">
+        window.onload=initAll;
+        function initAll(){
+            var xhttp = new XMLHttpRequest();
+            var url='/Accounts/tutorAlreadyFilledDetail';
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  var data=eval(this.responseText);
+                  console.log(data);
+                  if (typeof(data)=== "boolean"){
+
+                  }
+                  else{
+                        document.getElementById('first_subject').value=(data[0].subjectName1);
+                        document.getElementById('first_subject').style.color='red';
+                        document.getElementById('second_subject').value=(data[0].subjectName2);
+                        document.getElementById('second_subject').style.color='red';
+                        document.getElementById('third_subject').value=(data[0].subjectName3);
+                        document.getElementById('third_subject').style.color='red';
+
+                        document.getElementById('first_price').value=(data[0].hourlyPrice1);
+                        document.getElementById('first_price').style.color='red';
+                        document.getElementById('second_price').value=(data[0].hourlyPrice2);
+                        document.getElementById('second_price').style.color='red';
+                        document.getElementById('third_price').value=(data[0].hourlyPrice3);
+                        document.getElementById('third_price').style.color='red';
+
+                        document.getElementById('phonenumber').value=data[0].phoneNumber;
+                        document.getElementById('phonenumber').style.color='red';
+
+                        document.getElementById('address').value=data[0].address;
+                        document.getElementById('address').style.color='red';
+
+                        document.getElementById('about_yourself').value=data[0].summary;
+                        document.getElementById('about_yourself').style.color='red';
+
+                  }
+              }
+            };
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+    </script>
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 </html>

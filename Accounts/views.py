@@ -3,6 +3,7 @@ from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
 from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer, teacherReview, reviewSerializer
+from Accounts.models import tutorSubjectSerializer
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -214,6 +215,7 @@ def tutorLogout(request):
     return redirect('/')
 
 def detailsOfTutor(request,tutor_email):
+    print('in detail fo tutor')
     global tutorEmail
     if request.user.is_anonymous:
         return redirect('/')
@@ -242,7 +244,7 @@ def detailsOfTutor(request,tutor_email):
             print(studentEmail)
             studentDB=studentDetails.objects.filter(emailId=studentEmail)
             for j in range(len(studentDB)):
-                detailOfStudentUnder.append(studentDB[i])
+                detailOfStudentUnder.append(studentDB[j])
     hisStudent=False
     if fromStudentSide==True:
         studentEmail=request.user.email
@@ -261,7 +263,6 @@ def detailsOfTutor(request,tutor_email):
     noStudent=True
     if len(detailOfStudentUnder)==0:
         noStudent=False
-    print("accessing tutorDetail")
     return render(request,'detailsOfTutorTemplate/index.html',{'noReview':noReview,'noStudent':noStudent,'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor,'hisStudent':hisStudent,'reviewDetails':reviewDetails})
 
 def tutorSubjectDetailsFilling(request):
@@ -284,10 +285,13 @@ def tutorSubjectDetailsFilling(request):
         #     subject_name2=" "
         # if subject_name3==False:
         #     subject_name3=" "
+        print(tutorSubjectDetails.objects.filter(emailId=request.user.email).exists())
+        if tutorSubjectDetails.objects.filter(emailId=request.user.email).exists():
+                tutorSubjectDetails.objects.filter(emailId=request.user.email).delete()
         tutorSubjectDetails.objects.create(emailId=request.user.email, subjectName1=subject_name1,subjectName2=subject_name2,
             subjectName3=subject_name3,hourlyPrice1=hourlyPrice1, hourlyPrice2=hourlyPrice2, hourlyPrice3=hourlyPrice3,address=address,
             phoneNumber=phoneNumber,summary=summary)
-        return render(request,'home_page_template/index.html',{'foundtutor':True})
+        return redirect('/')
     else:
         return render(request, 'tutorSubjectDetailsTemplate/index.html')
 
@@ -473,3 +477,18 @@ def reviewSentimentAnalysis(request):
     reviewDetails=json.dumps(reviewDetails)
     print(reviewDetails)
     return HttpResponse(reviewDetails)
+
+def tutorAlreadyFilledDetail(request):
+    if request.user.email!='album.css':
+        if tutorSubjectDetails.objects.filter(emailId=request.user.email).exists():
+            tutorSubjectDB=tutorSubjectDetails.objects.filter(emailId=request.user.email)
+            tutorSubjectDetail=list()
+            for t in tutorSubjectDB:
+                tutorSubjectDetail.append(tutorSubjectSerializer(t).data)
+            tutorSubjectDetail=json.dumps(tutorSubjectDetail)
+            print(tutorSubjectDetail)
+            return HttpResponse(tutorSubjectDetail)
+        else:
+            return HttpResponse('false')
+    else:
+        return HttpResponse('false')

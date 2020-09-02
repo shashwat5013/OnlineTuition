@@ -24,5 +24,5 @@ urlpatterns = [
     path('studentRequestPendingPaymentUrl', views.studentRequestPendingPaymentUrl,name='studentRequestPendingPaymentUrl'),
     path('studentPendingRequestUrl', views.studentPendingRequestUrl,name='studentPendingRequestUrl'),
     path('reviewSentimentAnalysis', views.reviewSentimentAnalysis,name='reviewSentimentAnalysis'),
-
+    path('tutorAlreadyFilledDetail',views.tutorAlreadyFilledDetail,name='tutorAlreadyFilledDetail'),
 ]

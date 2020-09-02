@@ -39,7 +39,7 @@ class tutorSubjectDetails(models.Model):
     hourlyPrice3      = models.CharField(max_length=100, null=True, default=" ")
     address           = models.CharField(max_length=100, null=True, default=" ")
     phoneNumber       = models.CharField(max_length=20, null=True, default=" ")
-    summary           =  models.CharField(max_length=10000 , null=True, default=" ")
+    summary           = models.CharField(max_length=10000 , null=True, default=" ")
 
     def __str__(self):
         return self.emailId
@@ -88,3 +88,15 @@ class reviewSerializer(serializers.Serializer):
     review                 = serializers.CharField(max_length=10000)
     points                 = serializers.IntegerField()
     numberOfReviews        = serializers.BooleanField()
+
+class tutorSubjectSerializer(serializers.Serializer):
+    emailId           = serializers.EmailField()
+    subjectName1      = serializers.CharField()
+    subjectName2      = serializers.CharField()
+    subjectName3      = serializers.CharField()
+    hourlyPrice1      = serializers.CharField()
+    hourlyPrice2      = serializers.CharField()
+    hourlyPrice3      = serializers.CharField()
+    address           = serializers.CharField()
+    phoneNumber       = serializers.CharField()
+    summary           = serializers.CharField()
