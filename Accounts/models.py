@@ -3,6 +3,20 @@ from django.db import models
 
 # Create your models here.
 
+class newStudentTable(models.Model):
+    fullName          = models.CharField(max_length=100)
+    emailId           = models.EmailField(max_length=254,primary_key=True)
+    password          = models.CharField(max_length=10000)
+    profilePhoto      = models.ImageField(upload_to='studentProfile',null=False)
+    gender            = models.CharField(max_length=24,default="Male")
+
+class newTutorTable(models.Model):
+    fullName          = models.CharField(max_length=100)
+    emailId           = models.EmailField(max_length=254,primary_key=True)
+    password          = models.CharField(max_length=10000)
+    profilePhoto      = models.ImageField(upload_to='studentProfile',null=False)
+    gender            = models.CharField(max_length=24,default="Male")
+
 class studentDetails(models.Model):
     fullName          = models.CharField(max_length=100)
     emailId           = models.EmailField(max_length=254,primary_key=True)
@@ -10,24 +24,19 @@ class studentDetails(models.Model):
     password          = models.CharField(max_length=10000)
     profilePhoto      = models.ImageField(upload_to='studentProfile',null=False)
     termsAndCondition = models.BooleanField(default=False)
+    gender            = models.CharField(max_length=24,default="Male")
 
-    def __str__(self):
-        detail=self.fullName+" "+self.emailId
-        return detail
 
 
 class tutorDetails(models.Model):
     firstName         = models.CharField(max_length=100)
-    lastName         = models.CharField(max_length=100 , null=True)
+    lastName         = models.CharField(max_length=100 , default=" ")
     password         = models.CharField(max_length=10000 , null=True)
     emailId          = models.EmailField(max_length=254,primary_key=True)
     gender           = models.CharField(max_length=10, null=True)
     profilePhoto     = models.ImageField(upload_to='studentProfile', null=False)
     userName         = models.CharField(max_length=100)
 
-    def __str__(self):
-        detail=self.firstName+" "+self.lastName+" "+self.emailId
-        return detail
 
 class tutorSubjectDetails(models.Model):
     emailId           = models.EmailField(max_length=254, primary_key=True)
@@ -41,8 +50,6 @@ class tutorSubjectDetails(models.Model):
     phoneNumber       = models.CharField(max_length=20, null=True, default=" ")
     summary           = models.CharField(max_length=10000 , null=True, default=" ")
 
-    def __str__(self):
-        return self.emailId
 
 
 class studentTutorRelation(models.Model):

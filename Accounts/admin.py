@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import studentDetails, tutorDetails, tutorSubjectDetails, studentTutorRelation, tutorStudentRelation, tutorRequestPending, studentRequestFulfilled
-from .models import studentRequestPendingPayment, studentRequestRejected, teacherReview
+from .models import studentRequestPendingPayment, studentRequestRejected, teacherReview, newStudentTable, newTutorTable
 # Register your models here.
 
 admin.site.register(studentDetails)
@@ -13,3 +13,5 @@ admin.site.register(tutorRequestPending)
 admin.site.register(studentRequestRejected)
 admin.site.register(studentRequestPendingPayment)
 admin.site.register(teacherReview)
+admin.site.register(newStudentTable)
+admin.site.register(newTutorTable)

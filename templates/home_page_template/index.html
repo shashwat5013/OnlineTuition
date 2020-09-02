@@ -16,7 +16,25 @@
                 z-index: 2;
                 box-shadow: 2px 2px 2px #000;
             }
+            .button1{
+                background-color: #00fffb; /* Green */
+              border: none;
+              color: black;
+              padding: 15px 32px;
+              text-align: center;
+              text-decoration: none;
+              display: inline-block;
+              font-size: 14px;
+              border-radius: 12px;
+            }
+            .button1:hover{
+                box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+            .required{
+                color:red;
+            }
       </style>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>OnlineTuition Home</title>
@@ -67,82 +85,163 @@
     <!-- Preloader Start -->
     <header>
       <!-- Header Start -->
-      <div class="header-area">
+      {% if foundTutor %}
+      {% elif foundStudent %}
+      {% else %}
+          <div class="header-info-right" style="position:relative;Left:80%;">
+              <button type="button" name="button" class="button1" id="mySignUp" data-target="#mymodal" data-toggle="modal"> SignUp </button>
+              <div class="modal" id="mymodal">
+                  <div class="modal-dialog">
+                  <div class="modal-container">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                                  <h3>SignUp</h3>
+                                  <button type="button" name="close " class="text-danger" data-dismiss="modal" style="border: 2px solid white; cursor:pointer;">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                              <form action="/Accounts/Register" method="POST" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-user" aria-hidden="true">
+                                          </i>
+                                          Name:
+                                      </label>
+                                      <input type="text" name="Username" id="userName" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                          EmailId:
+                                      </label>
+                                      <input type="text" name="EmailId" id="emailId" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                          Password:
+                                      </label>
+                                      <input type="password" name="Password" id="password" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                          Confirm Password:
+                                      </label>
+                                      <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label>
+                                          <i class="fa fa-picture-o" aria-hidden="true"></i>
+                                          Profile Image:
+                                      </label>
+                                      <input type="file" name="ProfileImage" id="ProfileImage" class="container-login100-form-btn">
+                                  </div>
+                                  <div class="form-group">
+                                      <label  for="male"><i class="fa fa-male" aria-hidden="true"></i>Male</label>&nbsp;
+                                      <input type="radio" id="male" name="gender" value="male">
+                                      &nbsp;&nbsp;&nbsp;&nbsp;
+                                      <label  for="female"><i class="fa fa-female" aria-hidden="true"></i>Female</label>&nbsp;
+                                      <input type="radio" id="male" name="gender" value="female">
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required" for="student"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Student</label>
+                                      <input type="radio" id="student" name="designation" value="student" required>
+                                      &nbsp;&nbsp;&nbsp;&nbsp;
+                                      <label class="required" for="tutor"> <i class="fa fa-book" aria-hidden="true"></i>Teacher</label>
+                                      <input type="radio" id="tutor" name="designation" value="tutor" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <input type="submit" class="btn btn-success" required style="width:100%">
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                 </div>
+              </div>
+
+              <button type="button" name="button" class="button1" id="myLogin" data-target="#mymodalLogin" data-toggle="modal"> Login </button>
+              <div class="modal" id="mymodalLogin">
+                  <div class="modal-dialog">
+                  <div class="modal-container">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                                  <h3>SignUp</h3>
+                                  <button type="button" name="close" class="text-danger" data-dismiss="modal" style="border: 2px solid white;cursor:pointer;">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                              <form action="/Accounts/Login" method="POST" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                          EmailId:
+                                      </label>
+                                      <input type="text" name="EmailId" id="emailId" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required">
+                                          <i class="fa fa-unlock-alt" aria-hidden="true"></i>
+                                          Password:
+                                      </label>
+                                      <input type="password" name="Password" id="password" class="form-control" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label class="required" for="student"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Student</label>
+                                      <input type="radio" id="student" name="designation" value="student" required>
+                                      &nbsp;&nbsp;&nbsp;&nbsp;
+                                      <label class="required" for="tutor"> <i class="fa fa-book" aria-hidden="true"></i>Teacher</label>
+                                      <input type="radio" id="tutor" name="designation" value="tutor" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <input type="submit" class="btn btn-success" required style="width:100%">
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                 </div>
+              </div>
+          </div>
+          {% endif %}
+
+
+    <div class="header-area">
         <div class="main-header">
           <div class="header-top d-none d-lg-block">
             <!-- Left Social -->
-            <div class="header-left-social">
-              <ul class="header-social">
-                <li>
-                  <a href="#"><i class="fab fa-twitter"></i></a>
-                </li>
-                <li>
-                  <a href="https://www.facebook.com/sai4ull"
-                    ><i class="fab fa-facebook-f"></i
-                  ></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </li>
-                <li>
-                  <a href="#"><i class="fab fa-google-plus-g"></i></a>
-                </li>
-              </ul>
-            </div>
             <div class="container">
               <div class="col-xl-12">
                 <div
                   class="row d-flex justify-content-between align-items-center"
                 >
-                  <div class="header-info-left">
-                    <ul>
-                      <li>shashwat5013@gmail.com</li>
-                      <li>8340418840</li>
-                    </ul>
-                  </div>
-                  <div class="header-info-right">
+                  <div class="header-info-right" style="position: relative;left:60%;">
+
                     <ul>
                         {% if foundStudent %}
-                        <li>
-                          <a href="/"
+                        <li class="box">
+                          <a href="/Accounts/detailsOfTutor/{{student.emailId}}"
                             ><i class="ti-user"></i>Hi {{student.fullName}}</a
                           >
                         </li>
-                        <li>
+                        <li class="box">
                           <a href="/Accounts/studentLogout"
                             ><i class="ti-user"></i>LogOut</a
                           >
                         </li>
 
                         {% elif foundTutor %}
-                        <li>
-                          <a href="/"
+                        <li class="box">
+                          <a href="/Accounts/detailsOfTutor/{{tutor.emailId}}"
                             ><i class="ti-user"></i>Hi {{tutor.firstName}}</a
                           >
                         </li>
-                        <li>
+                        <li class="box">
                           <a href="/Accounts/tutorLogout"
                             ><i class="ti-user"></i>LogOut</a
                           >
                         </li>
-                        {% else %}
-
-                          <li>
-                            <a href="/Accounts/studentLogin"
-                              ><i class="ti-user"></i>Student Login</a
-                            >
-                          </li>
-                          <li>
-                            <a href="/Accounts/tutorLogin"><i class="ti-user"></i>Tutor Login</a>
-                          </li>
-                          <li>
-                            <a href="/Accounts/studentRegister"
-                              ><i class="ti-lock"></i>Student Register</a
-                            >
-                          </li>
-                          <li>
-                            <a href="/Accounts/tutorRegister"><i class="ti-lock"></i>Tutor Register</a>
-                          </li>
                           {% endif %}
                     </ul>
                   </div>

@@ -189,7 +189,7 @@ function pendingStillStatus(){
             var div3= document.createElement('div');
             div3.setAttribute('id','div3'+i);
             div3.classList.add("box","p-4","m-4","border","border-success");
-            div3.style.width="80%";
+            div3.style.width="85%";
         // <div class="imgBx"> div 31
         //     <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
         // </div>
@@ -225,7 +225,7 @@ function pendingStillStatus(){
         // class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;"
         var div3221 = document.createElement('a');
         div3221.setAttribute('id','div3221'+i);
-        div3221.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3221.classList.add("btn", "btn-primary");
         div3221.style.backgroundColor="#FE6726";
         div3221.text="Email for Acceptance";
         div3221.href="mailto:"+data[i].emailId;
@@ -286,7 +286,7 @@ function rejectionStatus() {
             var div3= document.createElement('div');
             div3.setAttribute('id','div3'+i);
             div3.classList.add("box","p-4","m-4","border","border-success");
-            div3.style.width="80%";
+            div3.style.width="85%";
         // <div class="imgBx"> div 31
         //     <img src="{{tutorDetailFetched.profilePhoto.url}}" height="180px" width="140px">
         // </div>
@@ -309,15 +309,17 @@ function rejectionStatus() {
 
         var div321 = document.createElement('h2');
         div321.setAttribute('id','div321'+i);
-        div321.style.position="absolute";
+        div321.style.position="relative";
+        div321.style.top="0px";
+        div321.style.left="100px";
         div321.innerHTML=data[i].firstName;
 
         var div3222 = document.createElement('a');
         div3222.setAttribute('id','div3222'+i);
-        div3222.style.position="absolute";
-        div3222.style.top="120px";
-        div3222.style.left="200px";
-        div3222.classList.add("btn", "btn-primary", "my-2","p-2");
+        div3222.style.position="relative";
+        div3222.style.top="20px";
+        div3222.style.left="100px";
+        div3222.classList.add("btn", "btn-primary");
         div3222.style.backgroundColor="#FE6726";
         div3222.text="Details";
         div3222.href="/Accounts/detailsOfTutor/"+data[i].emailId;

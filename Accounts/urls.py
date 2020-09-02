@@ -25,4 +25,7 @@ urlpatterns = [
     path('studentPendingRequestUrl', views.studentPendingRequestUrl,name='studentPendingRequestUrl'),
     path('reviewSentimentAnalysis', views.reviewSentimentAnalysis,name='reviewSentimentAnalysis'),
     path('tutorAlreadyFilledDetail',views.tutorAlreadyFilledDetail,name='tutorAlreadyFilledDetail'),
+    path('Register',views.Register,name='Register'),
+    path('Login',views.Login,name='Login'),
+
 ]
