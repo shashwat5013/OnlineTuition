@@ -81,3 +81,10 @@ class rejectedRequestSerializer(serializers.Serializer):
     lastName         = serializers.CharField(max_length=100)
     emailId          = serializers.EmailField(max_length=254)
     profilePhoto     = serializers.ImageField()
+
+class reviewSerializer(serializers.Serializer):
+    studentEmailId         = serializers.EmailField(max_length=100)
+    tutorEmailId           = serializers.EmailField(max_length=254)
+    review                 = serializers.CharField(max_length=10000)
+    points                 = serializers.IntegerField()
+    numberOfReviews        = serializers.BooleanField()

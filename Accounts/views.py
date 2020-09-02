@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import bcrypt
 from Accounts.models import studentDetails, tutorDetails, tutorSubjectDetails, tutorRequestPending, studentTutorRelation, tutorStudentRelation, studentRequestFulfilled
-from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer, teacherReview
+from Accounts.models import studentRequestRejected, studentRequestPendingPayment, rejectedRequestSerializer, teacherReview, reviewSerializer
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
@@ -254,11 +254,15 @@ def detailsOfTutor(request,tutor_email):
     for rr in reviewDB:
         print(reviewDetails.append(rr))
     numberOfReviews=len(reviewDB)
+    noReview=True
+    if numberOfReviews==0:
+        noReview=False
     print(reviewDetails)
     noStudent=True
     if len(detailOfStudentUnder)==0:
         noStudent=False
-    return render(request,'detailsOfTutorTemplate/index.html',{'noStudent':noStudent,'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor,'hisStudent':hisStudent,'reviewDetails':reviewDetails})
+    print("accessing tutorDetail")
+    return render(request,'detailsOfTutorTemplate/index.html',{'noReview':noReview,'noStudent':noStudent,'detailOfStudentUnder':detailOfStudentUnder,'fromStudentSide':fromStudentSide,'tutorDetailFetched':tutorDetailFetched, 'subjectDetailsTutor':subjectDetailsTutor,'hisStudent':hisStudent,'reviewDetails':reviewDetails})
 
 def tutorSubjectDetailsFilling(request):
     tutor=None
@@ -405,7 +409,6 @@ def studentRequestRejectedUrl(request):
     studentRequestRejectedDetails=json.dumps(studentRequestRejectedDetails)
     return HttpResponse(studentRequestRejectedDetails)
 
-
 def studentRequestPendingPaymentUrl(request):
     studentEmail=request.user.email
     studentRejectedDB=studentRequestPendingPayment.objects.filter(studentEmailId=studentEmail)
@@ -461,5 +464,12 @@ def reviewSentimentAnalysis(request):
         rr=True
     if request.user.email!="album.css":
         teacherReview.objects.create(studentEmailId=request.user.email,tutorEmailId=request.GET['tutor_email'],review=review,points=val,numberOfReviews=rr);
-        print("done")
-    return HttpResponse("done")
+    reviewDB=teacherReview.objects.filter(studentEmailId=request.user.email)
+    print(reviewDB)
+    reviewDetails=list()
+    for rejected in reviewDB:
+        ser=reviewSerializer(rejected)
+        reviewDetails.append(ser.data)
+    reviewDetails=json.dumps(reviewDetails)
+    print(reviewDetails)
+    return HttpResponse(reviewDetails)

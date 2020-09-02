@@ -164,7 +164,7 @@
   </div>
   <div class="" id="commentInput">
   </div>
-  <div class="container p-8 m-8" style="background-color:red; height:200%" >
+  <div class="container p-8 m-8" id="uppermost" style="background-color:red; height:200%" >
       {% if foundStudent %}
       {% else %}
       <br>
@@ -178,7 +178,7 @@
       </div>
       {% endif %}
       {% for student in detailOfStudentUnder %}
-      <div class="btn-group btn p-2 m-2" style="background-color:#1C9CF6;">
+      <div class="btn-group btn p-2 m-2" style="background-color:red;">
          <div class="container">
              <button type="button" class="btn btn-sm btn-outline-secondary p-4 m-4" style="background-color:#872EC4;" onclick="location.href='/Accounts/studentDetailUrl/{{student.emailId}}'">
                 <div class="col-md-12" style="background-color:#872EC4;">
@@ -192,28 +192,31 @@
                     </div>
                   </div>
                              <p class="text-center text-capitalize border border-success" href="/Accounts/detailsOfTutor/{{student.emailId}}" style="background-color:#CD201F; color:yellow; padding:2px;"> {{student.fullName}}</p>
+                             <div class=" ">
                   </div>
             </button>
 
          </div>
       </div>
       {% endfor %}
-      <div class=" ">
+      <div id="Upper">
+      {% if noReview %}
           <strong>
               <p class="d-inline bg-dark text-white col-lg-3 alert alert-primary border border-success text-capitalize" style="background-color: #6BFF07; font-size:20px;">
                   Reviews by different Student
               </p>
           </strong>
       </div>
-      {% for reviews in reviewDetails %}
 
+      <div id="myid">
+    {% for reviews in reviewDetails %}
       <div class="card-body m-4" style="background-color:white;">
           <div class="content mx-auto">
-              <h5>{{reviews.studentEmailId}}</h5>
+                    <a  href="/Accounts/studentDetailUrl/{{reviews.studentEmailId}}"><h5>{{reviews.studentEmailId}}</h5></a>
                     <div class="alert alert-success">
                       <strong>{{reviews.review}}</strong>
-                  </div>
-                  <p>
+                    </div>
+                    <p>
                       <strong class="alert alert-success rounded">review status </strong>
                       &nbsp;&nbsp;&nbsp;&nbsp;
                       {% if reviews.numberOfReviews %}
@@ -221,17 +224,20 @@
                       {% else %}
                       <img src="{% static 'detailsOfTutor/bad.jpg'%}"  height="100px" width="120px">
                       {% endif %}
-                 </p>
+                    </p>
           </div>
       </div>
-
       {% endfor %}
+  </div>
+      {% endif %}
+  </div>
+
       {% endif %}
   </div>
 </main>
 
-<footer class="text-muted p-2 m-2">
   <div class="container">
+      <footer class="text-muted p-2 m-2">
     <p class="float-right">
       <a href="#">Back to top</a>
     </p>
@@ -240,14 +246,11 @@
 <script src="{% static 'studentRequestStatus/js/jquery-3.5.1.min.js' %}"></script>
 <script type="text/javascript">
 window.onload=initAll;
-console.log($);
-console.log("starting value");
 function initAll(){
     reviewButton = document.getElementById('ReviewHim');
     reviewButton.onclick=reviewInput;
 }
 function reviewInput(){
-    console.log("pendingStillStatus");
     mainDiv=document.getElementById('commentInput');
     var div1=document.createElement('div');
     div1.classList.add("container","mx-auto","p-2","m-2");
@@ -280,6 +283,8 @@ function reviewInput(){
     div4.style.width="90%";
     div4.defaultValue="";
     div4.rows="2";
+    div4.style.fontSize="30pt";
+    div4.style.fontFamily="cursive";
     div4.cols="30";
 
     var div5 = document.createElement('button');
@@ -288,25 +293,94 @@ function reviewInput(){
     div5.style.backgroundColor="orange";
     div5.style.top="750px";
     div5.style.left="55%";
-    div5.style.fontSize="20px";
     div5.innerHTML="submit";
     div5.style.color="white";
     div5.onclick=function(){
-        console.log(document.getElementById('reviewData').value);
         var rev=document.getElementById('reviewData').value;
-        email = "{{tutorDetailFetched.emailId}}";
         var url = '/Accounts/reviewSentimentAnalysis?review='+rev+'&tutor_email='+"{{tutorDetailFetched.emailId}}";
-        //console.log(url);
         var req = new XMLHttpRequest();
         req.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                // alert(req.responseText);
+                var shashwat =eval(req.responseText);
+                var data=document.getElementById('reviewData').value;
+                var email="{{tutorDetailFetched.emailId}}";
+                var myId=document.getElementById('myid');
+                if(typeof(myId)!='undefined' &&  myId!= null){
+                    // myId=document.getElementById('div');
+                    // myId.setAttribute('id','myid');
+                    myId.remove();
+                }
+                myId=document.createElement('div');
+                myId.setAttribute('id','myid');
+                for(var i=shashwat.length-1;i>=0;i--){
+                    // <div class="card-body m-4" style="background-color:white;">
+                    var div1=document.createElement('div');
+                    div1.classList.add("card-body","m-4");
+                    div1.style.backgroundColor="white";
 
+                    //<div class="content mx-auto">
+                    var div11=document.createElement('div');
+                    div11.classList.add("content","mx-auto");
+
+                    // <h5>{{reviews.studentEmailId}}</h5>
+                    var div111 = document.createElement('a');
+                    div111.setAttribute('id','div111'+i);
+                    div111.href="/Accounts/studentDetailUrl/"+shashwat[i].studentEmailId;
+
+                    console.log(div111);
+                    var div1111=document.createElement('h5');
+                    div1111.setAttribute('id','div1111'+i);
+                    div1111.innerHTML=shashwat[i].studentEmailId;
+                    console.log(div1111);
+
+                    div111.appendChild(div1111);
+
+
+                    // <div class="alert alert-success">
+                    var div112= document.createElement('div');
+                    div112.classList.add("alert","alert-success");
+
+                    var div113=document.createElement('p');
+
+                    // <strong class="alert alert-success rounded">review status </strong>
+                    var div1131=document.createElement('strong');
+                    div1131.classList.add("alert","alert-success","rounded");
+                    div1131.innerHTML=shashwat[i].review;
+
+                    var div1141=document.createElement('strong');
+                    div1141.classList.add("alert","alert-success","rounded");
+                    div1141.innerHTML="review status";
+
+                    var div1132 = document.createElement('img');
+                    div1132.src="{% static 'detailsOfTutor/good.jpg'%}";
+                    div1132.style.height="100px";
+                    div1132.style.width="120px";
+
+                    var div1133 = document.createElement('img');
+                    div1133.src="{% static 'detailsOfTutor/good.jpg'%}";
+                    div1133.style.height="100px";
+                    div1133.style.width="120px";
+
+                    div112.appendChild(div1131);
+                    div113.appendChild(div1141);
+                    if (shashwat[i].numberOfReviews==true)
+                        div113.appendChild(div1132);
+                    else div113.appendChild(div1133);
+
+                    div11.appendChild(div111);
+                    div11.appendChild(div112);
+                    div11.appendChild(div113);
+                    div1.appendChild(div11);
+                    myId.appendChild(div1);
+              }
+              var upper =document.getElementById('Upper');
+              upper.appendChild(myId);
+              var commentBox= document.getElementById('commentInput');
+              commentBox.remove();
             }
         };
         req.open("GET", url, true);
         req.send();
-        div1.remove();
         alert("your review submitted successfullly");
     };
     div2.appendChild(div3);
