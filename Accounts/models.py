@@ -55,10 +55,12 @@ class tutorSubjectDetails(models.Model):
 class studentTutorRelation(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
+    subject           = models.CharField(max_length=254,default=" ")
 
 class tutorStudentRelation(models.Model):
     tutorEmailId      = models.EmailField(max_length=254)
     studentEmailId    = models.EmailField(max_length=254)
+    subject           = models.CharField(max_length=254,default=" ")
 
 class tutorRequestPending(models.Model):
     tutorEmailId      = models.EmailField(max_length=254)
@@ -68,14 +70,17 @@ class tutorRequestPending(models.Model):
 class studentRequestFulfilled(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
+    subject           = models.CharField(max_length=254)
 
 class studentRequestPendingPayment(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
+    subject           = models.CharField(max_length=254,default=" ")
 
 class studentRequestRejected(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
     tutorEmailId      = models.EmailField(max_length=254)
+    subject          = models.CharField(max_length=254,default=" ")
 
 class teacherReview(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
@@ -85,10 +90,12 @@ class teacherReview(models.Model):
     numberOfReviews = models.BooleanField(default=True)
 
 class rejectedRequestSerializer(serializers.Serializer):
+    id               = serializers.IntegerField()
     firstName         = serializers.CharField(max_length=100)
     lastName         = serializers.CharField(max_length=100)
     emailId          = serializers.EmailField(max_length=254)
     profilePhoto     = serializers.ImageField()
+    subject          = serializers.CharField()
 
 class reviewSerializer(serializers.Serializer):
     studentEmailId         = serializers.EmailField(max_length=100)

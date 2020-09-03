@@ -155,8 +155,8 @@
                   </button>
               </div>
                   <div class="col-lg-8 mx-auto">
-                      <button class="btnn btn1 shashwat boxx" onclick="location.href='/Accounts/accepting/{{student.emailId}}'" type="button">Accept</button>
-                      <button class="btnn btn1 shashwat boxx" onclick="location.href='/Accounts/rejecting/{{student.emailId}}'" type="button">Reject</button>
+                      <button class="btnn btn1 shashwat boxx" onclick="location.href='/Accounts/accepting/{{student.emailId}}?subject={{student.subject}}'" type="button">Accept</button>
+                      <button class="btnn btn1 shashwat boxx" onclick="location.href='/Accounts/rejecting/{{student.emailId}}?subject={{student.subject}}'" type="button">Reject</button>
                       <button class="btnn btn1 shashwat boxx" onclick="location.href='/Accounts/studentDetailUrl/{{student.emailId}}'" type="button">See Him</button>
                   </div>
             </div>

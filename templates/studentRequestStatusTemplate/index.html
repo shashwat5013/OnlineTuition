@@ -234,7 +234,7 @@ function pendingStillStatus(){
         div3222.setAttribute('id','div3222'+i);
         div3222.classList.add("btn", "btn-primary", "my-2","p-2");
         div3222.style.backgroundColor="#FE6726";
-        div3222.text="Details";
+        div3222.text="Details "+" "+data[i].subject;
         div3222.href="/Accounts/detailsOfTutor/"+data[i].emailId;
 
         div322.appendChild(div3221);
@@ -321,7 +321,7 @@ function rejectionStatus() {
         div3222.style.left="100px";
         div3222.classList.add("btn", "btn-primary");
         div3222.style.backgroundColor="#FE6726";
-        div3222.text="Details";
+        div3222.text="Details "+" "+data[i].subject;
         div3222.href="/Accounts/detailsOfTutor/"+data[i].emailId;
 
         div32.appendChild(div321);
@@ -410,7 +410,8 @@ function pendingStatus(){
         div3221.setAttribute('id','div3221'+i);
         div3221.classList.add("btn", "btn-primary", "my-2","p-2");
         div3221.style.backgroundColor="#FE6726";
-        div3221.text="pay Fees";
+        div3221.text="Pay Fees "+" "+data[i].subject;
+        div3221.href="/Accounts/pleaseMakePayment/"+data[i].emailId+"?subject="+data[i].subject;
 
         div322.appendChild(div3221);
         div32.appendChild(div321);
