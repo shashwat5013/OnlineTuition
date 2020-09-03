@@ -345,7 +345,9 @@ function pendingStatus(){
     var url = '/Accounts/studentRequestPendingPaymentUrl';
   req.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+        console.log('pending payment');
         var data=eval(req.responseText);
+        console.log(data);
         var divv=document.getElementById('nav-contactSecond');
         if(typeof(divv)!='undefined' &&  divv!= null){
             divv.remove();

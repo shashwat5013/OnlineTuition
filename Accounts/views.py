@@ -228,16 +228,18 @@ def detailsOfTutor(request,tutor_email):
         tutorEmail=tutor_email
     detailsOfTutorFetched=tutorDetails.objects.all()
     subjectDetailsTutorFetched=tutorSubjectDetails.objects.all()
-    subjectDetailsTutor=None
+    print(subjectDetailsTutorFetched)
+    subjectDetailsTutor=list()
     tutorDetailFetched=None
     for a in detailsOfTutorFetched:
-        if a.emailId==tutor_email:
+        if a.emailId==tutorEmail:
             tutorDetailFetched=a
             break
     for a in subjectDetailsTutorFetched:
-        if a.emailId==tutor_email:
-            subjectDetailsTutor=a
+        if a.emailId==tutorEmail:
+            subjectDetailsTutor.append(a)
             break
+    print(subjectDetailsTutor)
     fromStudentSide = True
     detailOfStudentUnder=[]
     if request.user.username.find(" Tutor")!=-1:
@@ -264,7 +266,6 @@ def detailsOfTutor(request,tutor_email):
     noReview=True
     if numberOfReviews==0:
         noReview=False
-    print(reviewDetails)
     noStudent=True
     if len(detailOfStudentUnder)==0:
         noStudent=False
@@ -301,16 +302,20 @@ def tutorSubjectDetailsFilling(request):
         return render(request, 'tutorSubjectDetailsTemplate/index.html')
 
 def tutorRequestPendingUrl(request,tutor_email):
-    if request.user.is_anonymous==True:
-        return render(request,'studentLoginTemplate/index.html')
     studentEmail= request.user.email
+    global tutorEmail
+    if tutorEmail!='album.css':
+        tutorEmail=tutor_email
+    subject=""
+    subject=request.POST['cars']
+    print(subject)
     tutorEmail = tutor_email
     tutorRequestPendingDetail= tutorRequestPending.objects.filter(tutorEmailId=tutorEmail)
     for i in range(len(tutorRequestPendingDetail)):
         if tutorRequestPendingDetail[i].tutorEmailId==tutorEmail and tutorRequestPendingDetail[i].studentEmailId==studentEmail:
             print('already exists')
             return home(request)
-    tutorRequestPending.objects.create(tutorEmailId=tutorEmail, studentEmailId=studentEmail)
+    tutorRequestPending.objects.create(tutorEmailId=tutorEmail, studentEmailId=studentEmail,subject=subject)
     return home(request)
 
 def pendingRequest(request):
@@ -333,6 +338,7 @@ def accepting(request,student_emailId):
     print(student_emailId)
     tutor_email=request.user.email
     if student_emailId!='album.css':
+        print("adding accepting status")
         tutorRequestPending.objects.filter(tutorEmailId=tutor_email,studentEmailId=student_emailId).delete()
         checkStudent=studentTutorRelation.objects.filter(studentEmailId=student_emailId)
         for s in checkStudent:
@@ -398,6 +404,7 @@ def studentPendingRequestUrl(request):
     print(studentRejectedDB)
     studentRequestRejectedDetails=list()
     for rejected in studentRejectedDB:
+        print(rejected.id)
         dataa=tutorDetails.objects.filter(emailId=rejected.tutorEmailId)
         for d in dataa:
             ser=rejectedRequestSerializer(d)
@@ -421,6 +428,7 @@ def studentRequestRejectedUrl(request):
 def studentRequestPendingPaymentUrl(request):
     studentEmail=request.user.email
     studentRejectedDB=studentRequestPendingPayment.objects.filter(studentEmailId=studentEmail)
+    print(studentRejectedDB)
     studentRequestPendingPaymentDetails=list()
     for rejected in studentRejectedDB:
         dataa=tutorDetails.objects.filter(emailId=rejected.tutorEmailId)

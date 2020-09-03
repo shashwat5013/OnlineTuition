@@ -147,16 +147,33 @@
                     </div>
                     <a href= "mailto: {{tutorDetailFetched.emailId}}" class="btn btn-primary my-2" style="background-color:#FE6726; widht:600px;">Email
                     </a>
-                    {% if fromStudentSide %}
-                         <button class="btn btn-primary my-8" onclick="location.href='/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}'" style="background-color:#FE6726; widht:600px;" type="button">
-                             Request Tuition
-                         </button>
-                    {% endif %}
                     {% if hisStudent %}
                         <button class="btn btn-primary my-8" id="ReviewHim"  style="background-color:#FE6726; widht:600px;" type="button">
                             Review Him
+
                         </button>
                     {% endif%}
+                    {% if fromStudentSide %}
+                    {% for s in subjectDetailsTutor %}
+                    <div class="btn btn-primary my-8"  style="background-color:#FE6726; widht:600px;">
+                        Request Tuition
+                        <!-- onclick="location.href='/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}'" -->
+                        <form action="/Accounts/tutorRequestPendingUrl/{{tutorDetailFetched.emailId}}" method="post">
+                            {% csrf_token %}
+                            <p>
+                                <select name="cars" id="cars">
+                                  <option value="select Subject">select Subject</option>
+                                  <option value="{{s.subjectName1}}">{{s.subjectName1}}</option>
+                                  <option value="{{s.subjectName2}}">{{s.subjectName2}}</option>
+                                  <option value="{{s.subjectName3}}">{{s.subjectName3}}</option>
+                                </select>
+                            </p>
+                            <br>
+                            <input type="submit" class="btn btn-success"text="Subject">
+                    </form>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
                 </p>
             </div>
         </div>

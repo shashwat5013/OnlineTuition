@@ -63,6 +63,7 @@ class tutorStudentRelation(models.Model):
 class tutorRequestPending(models.Model):
     tutorEmailId      = models.EmailField(max_length=254)
     studentEmailId    = models.EmailField(max_length=254)
+    subject =models.CharField(max_length=254,default=" ")
 
 class studentRequestFulfilled(models.Model):
     studentEmailId    = models.EmailField(max_length=254)
