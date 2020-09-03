@@ -366,7 +366,9 @@ def accepting(request,student_emailId):
             studentD=t.studentEmailId
             tutorD=t.tutorEmailId
             subjectD=t.subject
-        studentRequestPendingPayment.objects.create(studentEmailId=student_emailId,tutorEmailId=request.user.email,subject=request.GET['subject'])
+        if studentTutorRelation.objects.filter(studentEmailId=student_emailId,tutorEmailId=request.user.email,subject=request.GET['subject']).exists()==False and tutorStudentRelation.objects.filter(studentEmailId=student_emailId,tutorEmailId=request.user.email,subject=request.GET['subject']).exists()==False:
+            if studentRequestPendingPayment.objects.filter(studentEmailId=student_emailId,tutorEmailId=request.user.email,subject=request.GET['subject']).exists()==False:
+                studentRequestPendingPayment.objects.create(studentEmailId=student_emailId,tutorEmailId=request.user.email,subject=request.GET['subject'])
     return pendingRequest(request)
         # checkStudent=studentTutorRelation.objects.filter(studentEmailId=studnetD)
         # for s in checkStudent:
@@ -562,10 +564,13 @@ def tutorAlreadyFilledDetail(request):
 
 
 def pleaseMakePayment(request,tutor_email):
+    print(studentRequestPendingPayment.objects.all())
     studentRequestPendingPayment.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).delete()
-    studentRequestFulfilled.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
-    studentTutorRelation.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
-    tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=request.user.email,subject=request.GET['subject'])
+    print(studentRequestPendingPayment.objects.all())
+    if studentRequestFulfilled.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).exists()==False:
+        studentRequestFulfilled.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
+        studentTutorRelation.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
+        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=request.user.email,subject=request.GET['subject'])
     ans=""
     ans+=request.user.email+" "+tutor_email+" "+request.GET['subject']
     return HttpResponse(ans)

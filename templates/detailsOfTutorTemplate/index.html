@@ -296,8 +296,11 @@ function reviewInput(){
     div4.classList.add("card-body","mx-auto","p-1","m-1");
     div4.style.backgroundColor="#F4F6F7";
     div4.style.position='relative';
-    div4.style.top="10px";
-    div4.style.height="90%";
+    // top: 20px;
+    // height: 72%;
+    // width: 90%;
+    div4.style.top="20px";
+    div4.style.height="72%";
     div4.style.width="90%";
     div4.defaultValue="";
     div4.rows="2";
@@ -307,10 +310,12 @@ function reviewInput(){
 
     var div5 = document.createElement('button');
     div5.classList.add("d-inline", "text-white", "col-lg-3", "alert", "alert-success", "text-capitalize");
-    div5.style.position="absolute";
+    div5.style.position="relative";
     div5.style.backgroundColor="orange";
-    div5.style.top="750px";
-    div5.style.left="55%";
+//     top: 6%;
+// left: 65%;
+    div5.style.top="6%";
+    div5.style.left="65%";
     div5.innerHTML="submit";
     div5.style.color="white";
     div5.onclick=function(){
@@ -320,6 +325,7 @@ function reviewInput(){
         req.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var shashwat =eval(req.responseText);
+                console.log(shashwat);
                 var data=document.getElementById('reviewData').value;
                 var email="{{tutorDetailFetched.emailId}}";
                 var myId=document.getElementById('myid');
