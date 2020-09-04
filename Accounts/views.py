@@ -25,7 +25,7 @@ studentEmail=None
 foundUser=None
 
 alert_flag=None
-MERCHANT_KEY='Y&CzH4xLXXc7Z#lB'
+MERCHANT_KEY=''
 def ifLoggedIn(request):
     print(request.user.is_anonymous)
     if request.user.is_anonymous:
@@ -611,7 +611,7 @@ def handlingPaymentRequestSender(request):
                 order_id=a.id
                 new_oder_id=str(order_id)+"@@"+subjects+"@@"+tutor_email+"@@"+request.user.email
                 param_dict={
-                'MID': 'KQLAFt52920175799014',
+                'MID': '',
                 'ORDER_ID': str(new_oder_id),
                 'TXN_AMOUNT': str(cost),
                 'CUST_ID': tutor_email,
