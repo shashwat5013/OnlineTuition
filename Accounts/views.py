@@ -9,7 +9,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User, auth
 from django.contrib.auth import authenticate, login, logout
 import json
-
+from django.views.decorators.csrf import csrf_exempt
+from payTm import Checksum
 student = None
 foundStudent = False
 notfoundStudent = False
@@ -24,6 +25,7 @@ studentEmail=None
 foundUser=None
 
 alert_flag=None
+MERCHANT_KEY='Y&CzH4xLXXc7Z#lB'
 def ifLoggedIn(request):
     print(request.user.is_anonymous)
     if request.user.is_anonymous:
@@ -503,6 +505,7 @@ def reviewSentimentAnalysis(request):
             import re
             import nltk
             import  pickle
+            nltk.download('stopwords')
             from nltk.corpus import stopwords
             from nltk.stem.porter import PorterStemmer
             ps = PorterStemmer()
@@ -564,13 +567,85 @@ def tutorAlreadyFilledDetail(request):
 
 
 def pleaseMakePayment(request,tutor_email):
-    print(studentRequestPendingPayment.objects.all())
-    studentRequestPendingPayment.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).delete()
-    print(studentRequestPendingPayment.objects.all())
-    if studentRequestFulfilled.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).exists()==False:
-        studentRequestFulfilled.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
-        studentTutorRelation.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
-        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=request.user.email,subject=request.GET['subject'])
-    ans=""
-    ans+=request.user.email+" "+tutor_email+" "+request.GET['subject']
-    return HttpResponse(ans)
+    detailTutorDB=None
+    subjectDetailDB=None
+    detailTutor=list()
+    cost=None
+    if tutor_email!='album.css':
+        subject=request.GET['subject']
+        detailTutorDB=tutorDetails.objects.filter(emailId=tutor_email);
+        subjectDetailDB=tutorSubjectDetails.objects.filter(emailId=tutor_email)
+        for d in detailTutorDB:
+            detailTutor.append(d)
+        for d in subjectDetailDB:
+            if d.subjectName1.lower()==subject.lower():
+                cost=d.hourlyPrice1
+            elif d.subjectName2.lower()==subject.lower():
+                cost=d.hourlyPrice2
+            elif d.subjectName3.lower()==subject.lower():
+                cost=d.hourlyPrice2
+        print(cost,subject)
+    return render(request,'demo.html',{'detailTutor':detailTutor,'cost':cost,'subject':subject,'tutor_emailId':tutor_email})
+    # print(studentRequestPendingPayment.objects.all())
+    # studentRequestPendingPayment.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).delete()
+    # print(studentRequestPendingPayment.objects.all())
+    # if studentRequestFulfilled.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject']).exists()==False:
+    #     studentRequestFulfilled.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
+    #     studentTutorRelation.objects.create(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=request.GET['subject'])
+    #     tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=request.user.email,subject=request.GET['subject'])
+    # ans=""
+    # ans+=request.user.email+" "+tutor_email+" "+request.GET['subject']
+    # return HttpResponse(ans)
+def handlingPaymentRequestSender(request):
+    tutor_email=request.POST['emailId']
+    # subject=request.POST['subject']
+    subjects=request.POST['subject']
+    cost=request.POST['cost']
+    if tutor_email!='album.css':
+        print(tutor_email,subjects,cost)
+        if studentRequestPendingPayment.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=subjects).exists():
+            aa=studentRequestPendingPayment.objects.filter(studentEmailId=request.user.email,tutorEmailId=tutor_email,subject=subjects)
+            order_id=None
+            for a in aa:
+                print(a.id)
+                order_id=a.id
+                new_oder_id=str(order_id)+"@@"+subjects+"@@"+tutor_email+"@@"+request.user.email
+                param_dict={
+                'MID': 'KQLAFt52920175799014',
+                'ORDER_ID': str(new_oder_id),
+                'TXN_AMOUNT': str(cost),
+                'CUST_ID': tutor_email,
+                'INDUSTRY_TYPE_ID': 'Retail',
+                'WEBSITE': 'WEBSTAGING',
+                'CHANNEL_ID': 'WEB',
+                'CALLBACK_URL':'http://127.0.0.1:8000/Accounts/handlerequest/',
+            }
+            param_dict['CHECKSUMHASH'] = Checksum.generate_checksum(param_dict, MERCHANT_KEY)
+            return render(request,'paytm.html',{'param_dict':param_dict})
+        else:
+            return redirect('/')
+@csrf_exempt
+def handlerequest(request):
+    #paytm will send post request here
+    form = request.POST
+    response_dict = {}
+    for i in form.keys():
+        response_dict[i] = form[i]
+        if i == 'CHECKSUMHASH':
+            checksum = form[i]
+
+    verify = Checksum.verify_checksum(response_dict, MERCHANT_KEY, checksum)
+    if verify:
+        response_dict['RESPCODE'] ='01'
+        # if response_dict['RESPCODE'] == '01':
+        print('order successful')
+        tutor_email=response_dict['ORDERID'].split('@@')[2]
+        subjects=response_dict['ORDERID'].split('@@')[1]
+        student_email=response_dict['ORDERID'].split('@@')[3]
+        studentRequestPendingPayment.objects.filter(studentEmailId=student_email,tutorEmailId=tutor_email,subject=subjects).delete()
+        studentTutorRelation.objects.create(studentEmailId=student_email,tutorEmailId=tutor_email,subject=subjects)
+        tutorStudentRelation.objects.create(tutorEmailId=tutor_email,studentEmailId=student_email,subject=subjects)
+        studentRequestFulfilled.objects.create(studentEmailId=student_email,tutorEmailId=tutor_email,subject=subjects)
+        # else:
+            # print('order was not successful because' + response_dict['RESPMSG'])
+    return render(request, 'paymentstatus.html', {'response': response_dict})

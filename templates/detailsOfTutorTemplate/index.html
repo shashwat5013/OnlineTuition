@@ -162,10 +162,10 @@
                             {% csrf_token %}
                             <p>
                                 <select name="cars" id="cars">
-                                  <option value="select Subject">select Subject</option>
-                                  <option value="{{s.subjectName1}}">{{s.subjectName1}}</option>
-                                  <option value="{{s.subjectName2}}">{{s.subjectName2}}</option>
-                                  <option value="{{s.subjectName3}}">{{s.subjectName3}}</option>
+                                  <option value="Select Subject">select Subject</option>
+                                  <option value="{{s.subjectName1}}" class="text text-primary text-justify">{{s.subjectName1}}&emsp;&emsp;RS.{{s.hourlyPrice1}}</option>
+                                  <option value="{{s.subjectName2}}" class="text text-primary">{{s.subjectName2}}&emsp;&emsp;RS.{{s.hourlyPrice2}}</option>
+                                  <option value="{{s.subjectName3}}" class="text text-primary">{{s.subjectName3}}&emsp;&emsp;RS.{{s.hourlyPrice3}}</option>
                                 </select>
                             </p>
                             <br>
@@ -269,6 +269,11 @@ function initAll(){
     reviewButton.onclick=reviewInput;
 }
 function reviewInput(){
+    if(typeof(document.getElementById('commentInput'))!='undefined' &&  document.getElementById('commentInput')!= null){
+        // myId=document.getElementById('div');
+        // myId.setAttribute('id','myid');
+        document.getElementById('commentInput').remove();
+    }
     var mainDiv=document.getElementById('commentInputMain');
     var div1=document.createElement('div');
     div1.classList.add("container","mx-auto","p-2","m-2");
@@ -409,7 +414,7 @@ function reviewInput(){
         };
         req.open("GET", url, true);
         req.send();
-        alert("your review submitted successfullly");
+        setTimeout(function(){ slert('your review has been submitted.') }, 3000);
     };
     div2.appendChild(div3);
     div2.appendChild(div4);

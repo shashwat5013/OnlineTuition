@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+        body
+        {
+        background-image: url("{% static 'paytm.jpg' %}");
+        background-size: cover;
+        }
+        .card-body{
+            background-color:yellow;
+            color:black;
+            width:50%;
+            height:80%;
+            position:relative;
+            top:118px;
+            left:358px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="card-body text-justify">
+                <h1>Your Fees has been accepted and now you can join your class......</h1>
+        </div>
+        <button type="button" name="goingHome" onclick="location.href='/'" id="myButton"></button>
+    </body>
+    <script type="text/javascript">
+        window.onload=initAll;
+        function initAll(){
+            setTimeout(function(){ document.getElementById('myButton').click(); }, 5000);
+        }
+    </script>
+</html>

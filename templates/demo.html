@@ -6,7 +6,7 @@
         <style>
             body
             {
-            background-image: url("{% static 'sad3.jpeg' %}");
+            background-image: url("{% static 'paytm.jpg' %}");
             background-size: cover;
             }
             .heading{
@@ -22,14 +22,95 @@
                 width: 100%;
             }
         </style>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
+
     <body>
-        <marquee direction="up" scrollamount="20" scrolldelay="0">
-            <div class="shashwat2">
-                <div class="heading shashwat">
-                    <h1>Sorry you have no Request from Students</h1>
+        <!-- {% for tutor in detailTutor %}
+            {{tutor.firstName}}
+        {% endfor %}
+            {{cost}}{{subject}} -->
+
+            <div class="container">
+                <button class="btn btn-seconday" id="shashwat" data-target="#mymodal" data-toggle="modal"></button>
+                <div class="modal" id="mymodal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                    <h3>SignUp</h3>
+                                    <button type="button" name="close " class="text-danger" data-dismiss="modal" onclick="location.href='/'" style="border: 2px solid blue; cursor:pointer;">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/Accounts/handlingPaymentRequestSender" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group col-lg-8" >
+                                        <label class="required">
+                                            <i class="fa fa-user" aria-hidden="true">
+                                            </i>
+                                            Tutor Name:
+                                        </label>
+                                        {% for tutor in detailTutor %}
+                                        <input type="text" name="name" id="Name" class="form-control" value="{{tutor.firstName}}" readonly>
+                                        {% endfor %}
+                                       </label >
+                                    </div>
+                                    <div class="form-group col-lg-8">
+                                        <label class="required">
+                                            <i class="fa fa-user" aria-hidden="true">
+                                            </i>
+                                            Tutor Email:
+                                        </label>
+                                        {% for tutor in detailTutor %}
+                                        <input type="text" name="emailId" id="EmailId" class="form-control" value="{{tutor.emailId}}" readonly>
+                                        {% endfor %}
+                                       </label >
+                                    </div>
+                                    <div class="form-group col-lg-8" >
+                                        <label class="required">
+                                            <i class="fa fa-user" aria-hidden="true">
+                                            </i>
+                                            Subject:
+                                        </label>
+                                            <input type="text" name="subject" id="Subject" class="form-control" value="{{subject}}" readonly>
+
+                                       </label >
+                                    </div>
+                                    <div class="form-group col-lg-8" >
+                                        <label class="required">
+                                            <i class="fa fa-user" aria-hidden="true">
+                                            </i>
+                                            Cost:
+                                        </label>
+                                        <input type="text" name="cost" id="Cost" class="form-control" value="{{cost}}" readonly>
+                                       </label >
+                                    </div>
+                                    <div class="form-group" style="width:200px;">
+                                        <button name="Done" type="submit" value="Ready" class="btn btn-success">Proceed to Payment</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
-        </marquee>
     </body>
+    <script type="text/javascript">
+        window.onload=initAll;
+        function initAll(){
+            var btn=document.getElementById('shashwat');
+            btn.click();
+        }
+    </script>
 </html>

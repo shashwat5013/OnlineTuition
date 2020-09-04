@@ -28,5 +28,7 @@ urlpatterns = [
     path('Register',views.Register,name='Register'),
     path('Login',views.Login,name='Login'),
     path('pleaseMakePayment/<str:tutor_email>',views.pleaseMakePayment,name='pleaseMakePayment'),
+    path('handlerequest/',views.handlerequest,name='handlerequest'),
+    path('handlingPaymentRequestSender',views.handlingPaymentRequestSender,name="handlingPaymentRequestSender",)
 
 ]
