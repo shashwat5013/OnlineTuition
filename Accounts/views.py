@@ -44,14 +44,51 @@ def checkPassword(password, hashedPassword):
         return True
     else:
         return False
-
+class TutorCompleteDetail:
+    def __init__(self,firstName,emailId,gender,profilePhoto,summary,goodReviews,badReviews,subject1,subject2,subject3,studentCount):
+        self.firstName=firstName
+        self.emailId=emailId
+        self.gender=gender
+        self.profilePhoto=profilePhoto
+        self.goodReviews=goodReviews
+        self.badReviews=badReviews
+        self.summary=summary
+        self.subject1=subject1
+        self.subject2=subject2
+        self.subject3=subject3
+        self.studentCount=studentCount
 def home(request):
     global alert_flag
-    allTutorInOurDatabase=tutorDetails.objects.all()
-    isUsing = ifLoggedIn(request)
-    print(isUsing)
+    allTutorInOurDatabaseDB=tutorDetails.objects.all()
+    # isUsing = ifLoggedIn(request)
+    # print(isUsing)
+    alltutorInOurDatabase=list()
+    for tutor in allTutorInOurDatabaseDB:
+        tutorEmail=tutor.emailId
+        tutorGender=tutor.gender
+        tutorFirstName=tutor.firstName
+        tutorProfilePhoto=tutor.profilePhoto
+        tutorGoodReviews=0
+        tutorBadReviews=0
+        tutorSummary=""
+        tutorSubject1=""
+        tutorSubject2=""
+        tutorSubject3=""
+        teacherReviewInDB=teacherReview.objects.filter(tutorEmailId=tutorEmail)
+        for t in teacherReviewInDB:
+            if  t.points == 0:
+                tutorBadReviews+=1
+            else: tutorGoodReviews+=1
+        teacherSubjectDetailsInDb=tutorSubjectDetails.objects.filter(emailId=tutorEmail)
+        for t in teacherSubjectDetailsInDb:
+            tutorSummary=t.summary
+            tutorSubject1=t.subjectName1
+            tutorSubject2=t.subjectName2
+            tutorSubject3=t.subjectName3
+        tuorCD=TutorCompleteDetail(tutorFirstName,tutorEmail,tutorGender,tutorProfilePhoto,tutorSummary,tutorGoodReviews,tutorBadReviews,tutorSubject1,tutorSubject2,tutorSubject3,len(tutorStudentRelation.objects.filter(tutorEmailId=tutorEmail)))
+        alltutorInOurDatabase.append(tuorCD)
     if (request.user.username=="DSANDALGO" or request.user.is_anonymous==True):
-        return render(request, 'home_page_template/index.html', {'allTutorInOurDatabase':allTutorInOurDatabase,'no_user':True})
+        return render(request, 'home_page_template/index.html', {'allTutorInOurDatabase':alltutorInOurDatabase,'no_user':True})
     else:
         userName=request.user.username
         print(userName)
@@ -59,7 +96,7 @@ def home(request):
             _student=studentDetails.objects.filter(emailId=request.user.email)
             for d in _student:
                 student=d
-            return render(request, 'home_page_template/index.html', {'foundStudent': True, 'student': student, 'allTutorInOurDatabase':allTutorInOurDatabase})
+            return render(request, 'home_page_template/index.html', {'foundStudent': True, 'student': student, 'allTutorInOurDatabase':alltutorInOurDatabase})
         else:
             _tutor=tutorDetails.objects.filter(emailId=request.user.email)
             for d in _tutor:
@@ -147,6 +184,7 @@ def tutorLogin(request,DemailId,Dpassword):
     global tutor, foundUser,alert_flag
     emailId = DemailId
     password = Dpassword
+    print(emailId,password)
     detailsOftutor = tutorDetails.objects.filter(emailId=emailId)
     if len(detailsOftutor) != 0:
         for d in detailsOftutor:
