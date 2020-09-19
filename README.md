@@ -35,6 +35,9 @@ The main idea behind this project is to make a website for making the Tuition in
  # SCREENSHOTS
  
  (1) Home Page
-           
+           ![](ScreenShots/home1.JPG)
+           ![](ScreenShots/home2.JPG)
+           ![](ScreenShots/home3.JPG)
  
- 
+ (2) Login Modal Pop Up
+            
