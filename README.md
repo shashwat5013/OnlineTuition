@@ -40,4 +40,14 @@ The main idea behind this project is to make a website for making the Tuition in
            ![](ScreenShots/home3.JPG)
  
  (2) Login Modal Pop Up
+        ![](ScreenShots/login.JPG)
+ (3) SignUp Modal Pop Up
+        ![](ScreenShots/signup.JPG)
+ (4) Student Tutor Details
+        ![](ScreenShots/yourTeachers.JPG)
+  # 5th and 6th are done with AJAX REQUEST      
+ (5) Request Rejected       
+        ![](ScreenShots/rejectedStatus.JPG)
+  (6) Fees Pending
+        ![](ScreenShots/FeesPending.JPG)
             
