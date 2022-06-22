@@ -9,7 +9,7 @@ django-phonenumber-field==4.0.0
 djangorestframework==3.11.1
 joblib==0.16.0
 nltk==3.5
-numpy==1.19.1
+numpy==1.22.0
 pandas==1.1.1
 Pillow==7.2.0
 psycopg2==2.8.5
